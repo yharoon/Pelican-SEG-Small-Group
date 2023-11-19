@@ -4,7 +4,7 @@
   <div class="row justify-content-center align-items-center h-100">
     <div class="col-md-6 col-lg-4 order-lg-2">
       <!-- Center-Right Card -->
-      <div class="card border rounded-5 p-4 bg-dark text-light">
+      <div class="card rounded-5 p-4 bg-dark text-light" style="border: none;">
         <!-- Animated typing effect for Hi, Welcome Back! text using CSS keyframes -->
         <h1 class="text-center typed-text" style="font-family: 'Roboto Mono', monospace;">Hi, Welcome Back!</h1>
         <!-- Rest of your form -->
@@ -13,6 +13,9 @@
           <input type="text" name="username" class="form-control mb-3" placeholder="Enter your username">
           <input type="password" name="password" class="form-control mb-3" placeholder="Enter your password">
           <button type="submit" class="btn btn-light btn-block">Log in</button>
+          <div class="row">
+            <small>Not a member yet? <a href="{% url 'sign_up' %}">Sign Up</a></small> <!-- Replace 'sign_up' with your sign-up URL name -->
+          </div>
         </form>
       </div>
     </div>
