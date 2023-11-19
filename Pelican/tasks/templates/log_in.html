@@ -1,15 +1,32 @@
 {% extends 'base_content.html' %}
 {% block content %}
-<div class="container">
-  <div class="row">
-    <div class="col-sm-12 col-md-6 offset-md-3">
-      <h1>Log in</h1>
-      <form action="{% url 'log_in' %}" method="post">
-        {% csrf_token %}
-        <input type="hidden" name="next" value="{{ next }}">
-        {% include 'partials/bootstrap_form.html' with form=form %}
-        <input type="submit" value="Log in" class="btn btn-primary">
-      </form>
+<div class="container-fluid bg-black vh-100">
+  <div class="row justify-content-center align-items-center h-100">
+    <div class="col-md-6 col-lg-4 order-lg-2">
+      <!-- Center-Right Card -->
+      <div class="card border rounded-5 p-4 bg-dark text-light">
+        <h1 class="text-center">Log in</h1>
+        <form action="{% url 'log_in' %}" method="post">
+          {% csrf_token %}
+          <input type="hidden" name="next" value="{{ next }}">
+          {% include 'partials/bootstrap_form.html' with form=form %}
+          <button type="submit" class="btn btn-primary btn-block">Log in</button>
+        </form>
+      </div>
+    </div>
+    <div class="col-md-6 col-lg-4 order-lg-1">
+      <!-- Center-Left Card -->
+      <!-- <div class="card border rounded-5 p-4 bg-dark text-light"> -->
+        <!-- <h2 class="text-center mb-4">Manage your tasks easily</h2> -->
+        <!-- Image -->
+        <div class="text-center">
+          <img src="../static/images/image.png" class="img-fluid" alt="Background Image">
+        </div>
+        <p class="text-white fs-2" style="font-family: 'Courier New', Courier, monospace; font-weight: 600;">Manage your tasks</p>
+        <small class="text-white text-wrap text-center" style="width: 17rem;font-family: 'Courier New', Courier, monospace;">Join us to help make managinging your tasks easier</small>
+        <!-- Other content for the center-left card -->
+        <!-- Add any additional content here -->
+      </div>
     </div>
   </div>
 </div>
