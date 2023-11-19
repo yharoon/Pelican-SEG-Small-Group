@@ -5,12 +5,15 @@
     <div class="col-md-6 col-lg-4 order-lg-2">
       <!-- Center-Right Card -->
       <div class="card border rounded-5 p-4 bg-dark text-light">
-        <h1 class="text-center">Log in</h1>
+        <!-- Change font for Log in text to -apple-system-short-headline -->
+        <h1 class="text-center" style="font-family: -apple-system-short-headline, 'Arial', sans-serif;">Hi, Welcome Back!</h1>
+        <!-- Rest of your form -->
         <form action="{% url 'log_in' %}" method="post">
           {% csrf_token %}
-          <input type="hidden" name="next" value="{{ next }}">
-          {% include 'partials/bootstrap_form.html' with form=form %}
-          <button type="submit" class="btn btn-primary btn-block">Log in</button>
+          <!-- Add placeholders to the username and password fields -->
+          <input type="text" name="username" class="form-control mb-3" placeholder="Enter your username">
+          <input type="password" name="password" class="form-control mb-3" placeholder="Enter your password">
+          <button type="submit" class="btn btn-light btn-block">Log in</button>
         </form>
       </div>
     </div>
@@ -24,7 +27,6 @@
         </div>
         <p class="text-white fs-2" style="font-family: 'Courier New', Courier, monospace; font-weight: 600;">Manage your tasks</p>
         <small class="text-white text-wrap text-center" style="width: 17rem;font-family: 'Courier New', Courier, monospace;">Join us to help make managinging your tasks easier</small>
-        <!-- Other content for the center-left card -->
         <!-- Add any additional content here -->
       </div>
     </div>
