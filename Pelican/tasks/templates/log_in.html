@@ -5,12 +5,11 @@
     <div class="col-md-6 col-lg-4 order-lg-2">
       <!-- Center-Right Card -->
       <div class="card border rounded-5 p-4 bg-dark text-light">
-        <!-- Change font for Log in text to -apple-system-short-headline -->
-        <h1 class="text-center" style="font-family: -apple-system-short-headline, 'Arial', sans-serif;">Hi, Welcome Back!</h1>
+        <!-- Animated typing effect for Hi, Welcome Back! text using CSS keyframes -->
+        <h1 class="text-center typed-text" style="font-family: 'Roboto Mono', monospace;">Hi, Welcome Back!</h1>
         <!-- Rest of your form -->
         <form action="{% url 'log_in' %}" method="post">
           {% csrf_token %}
-          <!-- Add placeholders to the username and password fields -->
           <input type="text" name="username" class="form-control mb-3" placeholder="Enter your username">
           <input type="password" name="password" class="form-control mb-3" placeholder="Enter your password">
           <button type="submit" class="btn btn-light btn-block">Log in</button>
@@ -19,17 +18,31 @@
     </div>
     <div class="col-md-6 col-lg-4 order-lg-1">
       <!-- Center-Left Card -->
-      <!-- <div class="card border rounded-5 p-4 bg-dark text-light"> -->
-        <!-- <h2 class="text-center mb-4">Manage your tasks easily</h2> -->
-        <!-- Image -->
-        <div class="text-center">
-          <img src="../static/images/image.png" class="img-fluid" alt="Background Image">
-        </div>
-        <p class="text-white fs-2" style="font-family: 'Courier New', Courier, monospace; font-weight: 600;">Manage your tasks</p>
-        <small class="text-white text-wrap text-center" style="width: 17rem;font-family: 'Courier New', Courier, monospace;">Join us to help make managinging your tasks easier</small>
-        <!-- Add any additional content here -->
+      <div class="text-center">
+        <img src="../static/images/image.png" class="img-fluid" alt="Background Image">
       </div>
+      <p class="text-white fs-2 text-center" style="font-family: 'Courier New', Courier, monospace; font-weight: 600;">Manage your tasks</p>
+      <small class="text-white text-wrap text-center" style="width: 17rem;font-family: 'Courier New', Courier, monospace;">Join us to help make managing your tasks easier</small>
+      <!-- Additional content here -->
     </div>
   </div>
 </div>
+
+<style>
+  /* Define the animation for typing effect */
+  @keyframes typing {
+    from { width: 0 }
+    to { width: 100% }
+  }
+
+  /* Apply the typing animation to the 'typed-text' class */
+  .typed-text {
+    overflow: hidden;
+    border-right: .15em solid white; /* Adjust the border to mimic typing cursor */
+    white-space: nowrap;
+    margin: 0 auto; /* Center the text */
+    letter-spacing: .15em; /* Adjust letter spacing for better appearance */
+    animation: typing 2s steps(30, end);
+  }
+</style>
 {% endblock %}
