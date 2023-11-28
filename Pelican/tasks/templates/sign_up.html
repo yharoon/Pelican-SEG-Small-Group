@@ -6,7 +6,7 @@
     </div>
     <div class="col-4">
       <div class = "card h-99 rounded-9 bg-dark text-light" style = "border: none; padding:27px;">
-        <h1 class = "typed-text" style = "color:#30D5C8" ;> Sign up</h1>
+        <h1 class = "typed-text" style = "font-family: 'Roboto Mono',monospace; color:#30D5C8" ;> Sign up</h1>
         <form action="{% url 'sign_up' %}" method="post" class = 'sign_up'>
           {% csrf_token %}
           {% include 'partials/bootstrap_form.html' with form=form %}
@@ -37,7 +37,9 @@
   }
 
   .sign_up {
+    font-family: 'Roboto Mono', monospace;
     color:#30D5C8
+  
   }
 </style>
 
