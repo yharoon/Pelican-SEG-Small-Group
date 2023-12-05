@@ -27,6 +27,26 @@ def home(request):
     return render(request, 'home.html')
 
 
+@login_required
+def create_team(request):
+    if request.method == 'POST':
+        team_name = request.POST.get('team_name')
+        team = Team.objects.create(name=team_name, creator=request.user)
+        TeamMember.objects.create(team=team, user=request.user, is_admin=True)
+        return redirect('team_dashboard', team_id=team.id)
+    return render(request, 'create_team.html')
+ 
+ 
+@login_required
+def invite_member(request, team_id):
+    team = get_object_or_404(Team, id=team_id)
+    # Ensure the user is an admin of the team
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        # Code to handle invitation (sending email, creating invitation token, etc.)
+        return redirect('team_dashboard', team_id=team_id)
+    return render(request, 'invite_member.html', {'team': team})
+
 class LoginProhibitedMixin:
     """Mixin that redirects when a user is logged in."""
 
