@@ -2,7 +2,7 @@
 
 ## Team members
 The members of the team are:
-- Haroon Yasin -- test
+- Haroon Yasin
 - Ashwina Kalanathan
 - Wanzhen Wang
 - Manu Sibichan

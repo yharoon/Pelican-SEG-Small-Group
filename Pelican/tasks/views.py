@@ -8,7 +8,7 @@ from django.shortcuts import redirect, render
 from django.views import View
 from django.views.generic.edit import FormView, UpdateView
 from django.urls import reverse
-from tasks.forms import LogInForm, PasswordForm, UserForm, SignUpForm
+from tasks.forms import LogInForm, PasswordForm, UserForm, SignUpForm, TeamForm
 from tasks.helpers import login_prohibited
 
 
@@ -151,3 +151,42 @@ class SignUpView(LoginProhibitedMixin, FormView):
 
     def get_success_url(self):
         return reverse(settings.REDIRECT_URL_WHEN_LOGGED_IN)
+
+'''
+haroon code here
+
+making the functions to create teams
+'''
+
+class TeamView(LoginProhibitedMixin, UpdateView):
+    ''' Display add team screen and handles adding teams '''
+    form_class = TeamForm
+    template_name = "team.html"
+    model = TeamForm
+    redirect_when_logged_in_url = settings.REDIRECT_URL_WHEN_LOGGED_IN
+
+    def form_valid(self, form):
+        '''Handle valid form by saving the new team'''
+        form.save()
+        return super().form_valid(form)
+
+    '''def get_success_url(self):
+        """Redirect the user after successful team creation"""
+        messages.add_message(self.request, messages.SUCCESS, "Team Created!")
+        return reverse('dashboard')'''
+
+    def post(self, request):
+        form = TeamForm(request.POST)
+        self.next = request.POST.get('next') or settings.REDIRECT_URL_WHEN_LOGGED_IN
+        if form_valid(form):
+            return redirect(self.next)
+        messages.add_message(request, messages.ERROR, "Error in Team Creation")
+        return self.render()
+
+    def get(self, request):
+        self.next = request.GET.get('next') or ''
+        return self.render()
+
+    def render(self):
+        form = TeamForm()
+        return render(self.request, template_name, {'form':form, 'next':self.next})

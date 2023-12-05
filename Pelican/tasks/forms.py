@@ -2,7 +2,7 @@
 from django import forms
 from django.contrib.auth import authenticate
 from django.core.validators import RegexValidator
-from .models import User
+from .models import User, Team
 
 class LogInForm(forms.Form):
     """Form enabling registered users to log in."""
@@ -108,3 +108,66 @@ class SignUpForm(NewPasswordMixin, forms.ModelForm):
             password=self.cleaned_data.get('new_password'),
         )
         return user
+
+'''
+haroon code here
+
+we need to make a form we can use to create teams
+'''
+
+class UsernameInputField(forms.CharField):
+    def to_python(self, value):
+        if value in self.empty_value:
+            return self.empty_value
+        value = str(value).replace(" ","").split("@")
+        if self.strip:
+            value = [i.strip for i in value]
+        return value
+
+    def prepare_value(self,value):
+        if value is None:
+            return None
+        return "@".join([str(i) for i in value])
+
+class TeamForm(forms.ModelForm):
+    '''
+    form to create team
+    '''
+    class Meta:
+        '''
+        form options
+        '''
+        model = Team
+        fields = ['team_name','team_description']
+
+    team_name = forms.CharField(max_length=50, label="Team name")
+    team_description = forms.CharField(required=False, label="Team nescription")
+    team_members = UsernameInputField(label = "Input usernames of team members (with @ infront of usernames)")
+
+    def clean(self):
+        '''
+        this just checks that the usernames given are real
+        and gives error message if not real
+        '''
+        super().clean()
+        team_name = self.cleaned_data.get('team_name')
+        team_description = self.cleaned_data.get('team_description')
+
+        usernames = self.cleaned_data.get('team_members')
+        number_of_team_members = len(usernames)
+        i = 0
+
+        while (i < number_of_team_members and User.objects.filter(username = usernames[i]).exists()):
+            i+=1
+        if (i != number_of_team_members-1):
+            usernames = None
+            self.add_error('team_members', "Invalid user in team")
+
+    def save(self):
+        super().save(commit=False)
+        data = self.cleaned_data
+        team = Team.objects.create(team_name = data["team_name"], team_description = data["team_description"])
+        for usr in data["team_members"]:
+            user = User.objects.get(username = usr)
+            team.team_members.add(user)
+        return team

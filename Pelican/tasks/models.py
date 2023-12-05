@@ -40,3 +40,28 @@ class User(AbstractUser):
         """Return a URL to a miniature version of the user's gravatar."""
         
         return self.gravatar(size=60)
+
+
+'''
+haroon added code for teams
+'''
+
+class Team(models.Model):
+    '''Model used to create Teams'''
+
+    team_name = models.CharField(max_length=50, blank=False, unique=True)
+    '''Text Field for optional description of team'''
+    team_description = models.TextField(blank=True)
+    team_members = models.ManyToManyField(User)
+
+    class Meta:
+        '''
+        lays out order and permissions
+        '''
+        ordering = ['team_name']
+        '''
+        permissions = [
+            ('ammend_team', 'Can ammend team'),
+            ('delete_team', 'Can delete team'),
+            ('show_team','Can see team'),
+        ]'''
