@@ -109,6 +109,7 @@ class SignUpForm(NewPasswordMixin, forms.ModelForm):
         )
         return user
 
+
 class UsernameInputField(forms.CharField):
     def to_python(self, value):
         if value in self.empty_value:
