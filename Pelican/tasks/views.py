@@ -8,16 +8,21 @@ from django.shortcuts import redirect, render
 from django.views import View
 from django.views.generic.edit import FormView, UpdateView
 from django.urls import reverse
-from tasks.forms import LogInForm, PasswordForm, UserForm, SignUpForm
+from tasks.forms import LogInForm, PasswordForm, UserForm, SignUpForm, TeamForm
 from tasks.helpers import login_prohibited
-
+from .models import User, Team
 
 @login_required
 def dashboard(request):
-    """Display the current user's dashboard."""
-
     current_user = request.user
-    return render(request, 'dashboard.html', {'user': current_user})
+    team_form = TeamForm(request.POST or None)
+    if request.method == 'POST' and team_form.is_valid():
+        new_team = team_form.save()
+        new_team.members.add(current_user)
+        new_team.save()
+        return redirect('dashboard')
+
+    return render(request, 'dashboard.html', {'user': current_user, 'team_form': team_form})
 
 
 @login_prohibited
@@ -25,27 +30,6 @@ def home(request):
     """Display the application's start/home screen."""
 
     return render(request, 'home.html')
-
-
-@login_required
-def create_team(request):
-    if request.method == 'POST':
-        team_name = request.POST.get('team_name')
-        team = Team.objects.create(name=team_name, creator=request.user)
-        TeamMember.objects.create(team=team, user=request.user, is_admin=True)
-        return redirect('team_dashboard', team_id=team.id)
-    return render(request, 'create_team.html')
- 
- 
-@login_required
-def invite_member(request, team_id):
-    team = get_object_or_404(Team, id=team_id)
-    # Ensure the user is an admin of the team
-    if request.method == 'POST':
-        email = request.POST.get('email')
-        # Code to handle invitation (sending email, creating invitation token, etc.)
-        return redirect('team_dashboard', team_id=team_id)
-    return render(request, 'invite_member.html', {'team': team})
 
 class LoginProhibitedMixin:
     """Mixin that redirects when a user is logged in."""
@@ -171,3 +155,17 @@ class SignUpView(LoginProhibitedMixin, FormView):
 
     def get_success_url(self):
         return reverse(settings.REDIRECT_URL_WHEN_LOGGED_IN)
+
+
+class TeamCreateView(LoginRequiredMixin, FormView):
+    """Display team creation screen and handle team creation."""
+
+    template_name = 'team.html'
+    form_class = TeamForm
+
+    def form_valid(self, form):
+        new_team = form.save()
+        new_team.members.add(self.request.user)
+        new_team.save()
+        return redirect('dashboard')
+
