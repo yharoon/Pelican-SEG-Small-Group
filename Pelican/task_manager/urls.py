@@ -18,6 +18,7 @@ from django.contrib import admin
 from django.urls import path
 from tasks import views
 
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.home, name='home'),
@@ -28,4 +29,3 @@ urlpatterns = [
     path('profile/', views.ProfileUpdateView.as_view(), name='profile'),
     path('sign_up/', views.SignUpView.as_view(), name='sign_up'),
     path('team/', views.TeamView.as_view(), name='team'),
-]
