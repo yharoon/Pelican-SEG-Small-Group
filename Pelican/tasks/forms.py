@@ -109,11 +109,6 @@ class SignUpForm(NewPasswordMixin, forms.ModelForm):
         )
         return user
 
-'''
-haroon code here
-
-we need to make a form we can use to create teams
-'''
 
 class UsernameInputField(forms.CharField):
     def to_python(self, value):
@@ -129,9 +124,7 @@ class UsernameInputField(forms.CharField):
             return None
         return "@".join([str(i) for i in value])
 
-
 class TeamForm(forms.ModelForm):
     class Meta:
         model = Team
-        fields = ['name']
-
+        fields = ['name', 'members']

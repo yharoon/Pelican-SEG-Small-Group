@@ -156,16 +156,27 @@ class SignUpView(LoginProhibitedMixin, FormView):
     def get_success_url(self):
         return reverse(settings.REDIRECT_URL_WHEN_LOGGED_IN)
 
-
 class TeamCreateView(LoginRequiredMixin, FormView):
     """Display team creation screen and handle team creation."""
 
     template_name = 'team.html'
     form_class = TeamForm
 
-    def form_valid(self, form):
-        new_team = form.save()
-        new_team.members.add(self.request.user)
-        new_team.save()
-        return redirect('dashboard')
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['users'] = User.objects.all()  # Get all users from the database
+        return context
 
+    def form_valid(self, form):
+        team_name = form.cleaned_data['name']
+        selected_members = form.cleaned_data['members']
+
+        new_team = Team.objects.create(name=team_name)
+        new_team.members.add(*selected_members)
+        
+        team_members = new_team.members.all()
+        return render(
+            self.request,
+            'team_created.html',
+            {'team_name': team_name, 'team_members': team_members}
+        )
