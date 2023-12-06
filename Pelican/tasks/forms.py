@@ -108,3 +108,33 @@ class SignUpForm(NewPasswordMixin, forms.ModelForm):
             password=self.cleaned_data.get('new_password'),
         )
         return user
+
+class UsernameInputField(forms.CharField):
+    def to_python(self, value):
+        if value in self.empty_value:
+            return self.empty_value
+        value = str(value).replace(" ","").split("@")
+        if self.strip:
+            value = [i.strip for i in value]
+        return value
+
+    def prepare_value(self,value):
+        if value is None:
+            return None
+        return "@".join([str(i) for i in value])
+
+
+class UsernameInputField(forms.CharField):
+    def to_python(self, value):
+        if value in self.empty_value:
+            return self.empty_value
+        value = str(value).replace(" ","").split("@")
+        if self.strip:
+            value = [i.strip for i in value]
+        return value
+
+    def prepare_value(self,value):
+        if value is None:
+            return None
+        return "@".join([str(i) for i in value])
+

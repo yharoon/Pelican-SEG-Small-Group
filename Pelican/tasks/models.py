@@ -3,8 +3,11 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 from libgravatar import Gravatar
 
+
+
 class User(AbstractUser):
     """Model used for user authentication, and team member related information."""
+
 
     username = models.CharField(
         max_length=30,
@@ -17,7 +20,7 @@ class User(AbstractUser):
     first_name = models.CharField(max_length=50, blank=False)
     last_name = models.CharField(max_length=50, blank=False)
     email = models.EmailField(unique=True, blank=False)
-
+    
 
     class Meta:
         """Model options."""
@@ -40,3 +43,10 @@ class User(AbstractUser):
         """Return a URL to a miniature version of the user's gravatar."""
         
         return self.gravatar(size=60)
+
+
+class Team(models.Model):
+    team_name = models.CharField(max_length = 100)
+    team_description = models.TextField(blank = True)
+    team_members = models.ManyToManyField(User,related_name = 'teams')
+
