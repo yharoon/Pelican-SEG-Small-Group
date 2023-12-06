@@ -38,7 +38,7 @@ class User(AbstractUser):
 
 class Team(models.Model):
     name = models.CharField(max_length=100, unique=True)
-    members = models.ManyToManyField(User, related_name='teams')
+    members = models.ManyToManyField(User, related_name='teams', null=True)
 
     def __str__(self):
         return self.name
