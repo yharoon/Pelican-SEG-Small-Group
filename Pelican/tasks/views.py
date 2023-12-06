@@ -15,14 +15,26 @@ from .models import User, Team
 @login_required
 def dashboard(request):
     current_user = request.user
+    print(current_user)  # Add this line for debugging
+
     team_form = TeamForm(request.POST or None)
+
     if request.method == 'POST' and team_form.is_valid():
         new_team = team_form.save()
         new_team.members.add(current_user)
         new_team.save()
         return redirect('dashboard')
 
-    return render(request, 'dashboard.html', {'user': current_user, 'team_form': team_form})
+    # Fetching teams associated with the current user
+    user_teams = Team.objects.filter(members=current_user)
+    print(user_teams)  # Add this line for debugging
+
+    return render(request, 'dashboard.html', {'user': current_user, 'team_form': team_form, 'user_teams': user_teams})
+
+
+def team_detail(request, team_id):
+    # You can add more logic here if needed
+    return render(request, 'team_detail.html')  # Placeholder team detail view
 
 
 @login_prohibited
@@ -173,6 +185,9 @@ class TeamCreateView(LoginRequiredMixin, FormView):
 
         new_team = Team.objects.create(name=team_name)
         new_team.members.add(*selected_members)
+        
+        # Add the current user to the team
+        new_team.members.add(self.request.user)  # Add this line
         
         team_members = new_team.members.all()
         return render(
