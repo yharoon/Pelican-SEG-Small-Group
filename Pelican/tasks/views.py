@@ -10,14 +10,19 @@ from django.views.generic.edit import FormView, UpdateView
 from django.urls import reverse
 from tasks.forms import LogInForm, PasswordForm, UserForm, SignUpForm, TeamForm
 from tasks.helpers import login_prohibited
-
+from .models import User, Team
 
 @login_required
 def dashboard(request):
-    """Display the current user's dashboard."""
-
     current_user = request.user
-    return render(request, 'dashboard.html', {'user': current_user})
+    team_form = TeamForm(request.POST or None)
+    if request.method == 'POST' and team_form.is_valid():
+        new_team = team_form.save()
+        new_team.members.add(current_user)
+        new_team.save()
+        return redirect('dashboard')
+
+    return render(request, 'dashboard.html', {'user': current_user, 'team_form': team_form})
 
 
 @login_prohibited
@@ -25,7 +30,6 @@ def home(request):
     """Display the application's start/home screen."""
 
     return render(request, 'home.html')
-
 
 class LoginProhibitedMixin:
     """Mixin that redirects when a user is logged in."""
@@ -152,41 +156,27 @@ class SignUpView(LoginProhibitedMixin, FormView):
     def get_success_url(self):
         return reverse(settings.REDIRECT_URL_WHEN_LOGGED_IN)
 
-'''
-haroon code here
+class TeamCreateView(LoginRequiredMixin, FormView):
+    """Display team creation screen and handle team creation."""
 
-making the functions to create teams
-'''
-
-class TeamView(LoginProhibitedMixin, UpdateView):
-    ''' Display add team screen and handles adding teams '''
+    template_name = 'team.html'
     form_class = TeamForm
-    template_name = "team.html"
-    model = TeamForm
-    redirect_when_logged_in_url = settings.REDIRECT_URL_WHEN_LOGGED_IN
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['users'] = User.objects.all()  # Get all users from the database
+        return context
 
     def form_valid(self, form):
-        '''Handle valid form by saving the new team'''
-        form.save()
-        return super().form_valid(form)
+        team_name = form.cleaned_data['name']
+        selected_members = form.cleaned_data['members']
 
-    '''def get_success_url(self):
-        """Redirect the user after successful team creation"""
-        messages.add_message(self.request, messages.SUCCESS, "Team Created!")
-        return reverse('dashboard')'''
-
-    def post(self, request):
-        form = TeamForm(request.POST)
-        self.next = request.POST.get('next') or settings.REDIRECT_URL_WHEN_LOGGED_IN
-        if form_valid(form):
-            return redirect(self.next)
-        messages.add_message(request, messages.ERROR, "Error in Team Creation")
-        return self.render()
-
-    def get(self, request):
-        self.next = request.GET.get('next') or ''
-        return self.render()
-
-    def render(self):
-        form = TeamForm()
-        return render(self.request, template_name, {'form':form, 'next':self.next})
+        new_team = Team.objects.create(name=team_name)
+        new_team.members.add(*selected_members)
+        
+        team_members = new_team.members.all()
+        return render(
+            self.request,
+            'team_created.html',
+            {'team_name': team_name, 'team_members': team_members}
+        )
