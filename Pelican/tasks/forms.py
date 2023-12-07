@@ -3,6 +3,7 @@ from django import forms
 from django.contrib.auth import authenticate
 from django.core.validators import RegexValidator
 from .models import User, Team
+from .models import Task
 
 class LogInForm(forms.Form):
     """Form enabling registered users to log in."""
@@ -128,3 +129,8 @@ class TeamForm(forms.ModelForm):
     class Meta:
         model = Team
         fields = ['name', 'members']
+
+class TaskForm(forms.ModelForm):
+    class Meta:
+        model = Task
+        fields = ['name', 'description', 'due_date', 'assigned_to']
