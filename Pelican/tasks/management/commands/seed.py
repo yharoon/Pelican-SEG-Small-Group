@@ -1,4 +1,5 @@
 from django.core.management.base import BaseCommand, CommandError
+from django.utils import timezone
 
 from tasks.models import User
 
@@ -37,11 +38,11 @@ class Command(BaseCommand):
 
     def generate_random_users(self):
         user_count = User.objects.count()
-        while  user_count < self.USER_COUNT:
-            print(f"Seeding user {user_count}/{self.USER_COUNT}", end='\r')
+        while user_count < self.USER_COUNT:
+            self.stdout.write(f"Seeding user {user_count}/{self.USER_COUNT}", ending='')
             self.generate_user()
             user_count = User.objects.count()
-        print("User seeding complete.      ")
+        self.stdout.write("User seeding complete.      ")
 
     def generate_user(self):
         first_name = self.faker.first_name()
@@ -49,7 +50,7 @@ class Command(BaseCommand):
         email = create_email(first_name, last_name)
         username = create_username(first_name, last_name)
         self.try_create_user({'username': username, 'email': email, 'first_name': first_name, 'last_name': last_name})
-       
+
     def try_create_user(self, data):
         try:
             self.create_user(data)
