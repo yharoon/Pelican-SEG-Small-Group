@@ -4,18 +4,45 @@
 <div class="container">
   <div class="row">
     <div class="col-12">
-      <h1>Team Details</h1>
-      <h2>{{ team.name }}</h2>
-      <!-- Display other team details -->
-      <p>Team ID: {{ team.id }}</p>
-      <p>Members:</p>
+      <h1>Team Details: {{ team.name }}</h1>
+      <h2>Members:</h2>
       <ul>
         {% for member in team.members.all %}
           <li>{{ member.username }}</li>
-          <!-- Display other member details -->
         {% endfor %}
       </ul>
-      <!-- You can add more details as needed -->
+    </div>
+    <div class="col-6">
+      <h2>Tasks</h2>
+      <ul>
+        {% for task in team_tasks %}
+          <li>
+            {{ task.description }} - Due: {{ task.due_date }}
+            <ul>
+              {% for assigned_user in task.assigned_to.all %}
+                <li>{{ assigned_user.username }}</li>
+              {% endfor %}
+            </ul>
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+    <div class="col-6">
+      <h2>Create New Task</h2>
+      <form method="post" action="{% url 'team_detail' team.id %}">
+        {% csrf_token %}
+        <label for="task_description">Task Description:</label>
+        <input type="text" name="description" id="task_description">
+        <label for="assigned_to">Assign To:</label>
+        <select name="assigned_to" multiple>
+          {% for member in team.members.all %}
+            <option value="{{ member.id }}">{{ member.username }}</option>
+          {% endfor %}
+        </select>
+        <label for="due_date">Due Date:</label>
+        <input type="date" name="due_date" id="due_date">
+        <button type="submit">Create Task</button>
+      </form>
     </div>
   </div>
 </div>
