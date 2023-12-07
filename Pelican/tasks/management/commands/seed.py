@@ -1,20 +1,13 @@
-from django.core.management.base import BaseCommand, CommandError
-from django.utils import timezone
-from django.utils.termcolors import colorize
-
+from django.core.management.base import BaseCommand
 from tasks.models import User
-
-import pytz
 from faker import Faker
-from random import randint, random
-
+from random import randint
 
 user_fixtures = [
     {'username': '@johndoe', 'email': 'john.doe@example.org', 'first_name': 'John', 'last_name': 'Doe'},
     {'username': '@janedoe', 'email': 'jane.doe@example.org', 'first_name': 'Jane', 'last_name': 'Doe'},
     {'username': '@charlie', 'email': 'charlie.johnson@example.org', 'first_name': 'Charlie', 'last_name': 'Johnson'},
 ]
-
 
 class Command(BaseCommand):
     """Build automation command to seed the database."""
@@ -24,9 +17,8 @@ class Command(BaseCommand):
     help = 'Seeds the database with sample data'
 
     def __init__(self):
-        super().__init__()  # Add this line
+        super().__init__()
         self.faker = Faker('en_GB')
-        self.style = colorize  # Initializing self.style
 
     def handle(self, *args, **options):
         self.create_users()
@@ -43,10 +35,10 @@ class Command(BaseCommand):
     def generate_random_users(self):
         user_count = User.objects.count()
         while user_count < self.USER_COUNT:
-            self.stdout.write(f"Seeding user {user_count}/{self.USER_COUNT}", ending='')
+            print(f"Seeding user {user_count}/{self.USER_COUNT}", end='\r')
             self.generate_user()
             user_count = User.objects.count()
-        self.stdout.write("User seeding complete.      ")
+        print("User seeding complete.")
 
     def generate_user(self):
         first_name = self.faker.first_name()
@@ -74,4 +66,4 @@ def create_username(first_name, last_name):
     return '@' + first_name.lower() + last_name.lower()
 
 def create_email(first_name, last_name):
-    return first_name + '.' + last_name + '@example.org'
+    return f"{first_name.lower()}.{last_name.lower()}@example.org"
