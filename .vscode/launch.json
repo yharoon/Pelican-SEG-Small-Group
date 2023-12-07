@@ -1,0 +1,13 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "C/C++ Runner: Debug Session",
+      "type": "lldb",
+      "request": "launch",
+      "args": [],
+      "cwd": "/Users/wanzhen777/Desktop/assignment2023cpp-WANGWANZHEnnn/Part2",
+      "program": "/Users/wanzhen777/Desktop/assignment2023cpp-WANGWANZHEnnn/Part2/build/Debug/outDebug"
+    }
+  ]
+}
