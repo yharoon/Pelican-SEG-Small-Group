@@ -42,3 +42,13 @@ class Team(models.Model):
 
     def __str__(self):
         return self.name
+
+class Task(models.Model):
+    description = models.CharField(max_length=255)
+    due_date = models.DateField()
+    team = models.ForeignKey(Team, on_delete=models.CASCADE, related_name='tasks')
+    assigned_to = models.ManyToManyField(User, related_name='assigned_tasks')
+    name = models.CharField(max_length=100, null=True, blank=True)
+
+    def __str__(self):
+        return self.description
