@@ -1,11 +1,13 @@
 from django.core.management.base import BaseCommand, CommandError
 from django.utils import timezone
+from django.utils.termcolors import colorize
 
 from tasks.models import User
 
 import pytz
 from faker import Faker
 from random import randint, random
+
 
 user_fixtures = [
     {'username': '@johndoe', 'email': 'john.doe@example.org', 'first_name': 'John', 'last_name': 'Doe'},
@@ -22,7 +24,9 @@ class Command(BaseCommand):
     help = 'Seeds the database with sample data'
 
     def __init__(self):
+        super().__init__()  # Add this line
         self.faker = Faker('en_GB')
+        self.style = colorize  # Initializing self.style
 
     def handle(self, *args, **options):
         self.create_users()
