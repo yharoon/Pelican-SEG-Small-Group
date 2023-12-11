@@ -1,48 +1,90 @@
 {% include 'base_content.html' %}
 
 {% block content %}
+<style>
+  /* Custom CSS for the dashboard */
+  body {
+    background-color: black; /* Set the background color of the entire page to black */
+    color: white; /* Set text color to white for better readability */
+    font-family: 'Roboto Mono', monospace; /* Set font family */
+  }
+
+  /* Define pastel colors for the cards */
+  .card-pastel-blue {
+    background-color: #30D5C8; /* Pastel blue */
+  }
+  /* Add more classes for different pastel colors if needed */
+
+  /* Adjust alignment for form elements */
+  form {
+    display: flex;
+    flex-direction: column;
+  }
+
+  label,
+  input,
+  select,
+  button {
+    margin-bottom: 10px;
+  }
+  
+  /* Align text to the top */
+  .align-top {
+    align-items: flex-start !important;
+  }
+</style>
 <div class="container">
-  <div class="row">
-    <div class="col-12">
-      <h1>Team Details: {{ team.name }}</h1>
-      <h2>Members:</h2>
-      <ul>
-        {% for member in team.members.all %}
-          <li>{{ member.username }}</li>
-        {% endfor %}
-      </ul>
-    </div>
-    <div class="col-6">
-      <h2>Tasks</h2>
-      <ul>
-        {% for task in team_tasks %}
-          <li>
-            {{ task.description }} - Due: {{ task.due_date }}
-            <ul>
-              {% for assigned_user in task.assigned_to.all %}
-                <li>{{ assigned_user.username }}</li>
-              {% endfor %}
-            </ul>
-          </li>
-        {% endfor %}
-      </ul>
-    </div>
-    <div class="col-6">
-      <h2>Create New Task</h2>
-      <form method="post" action="{% url 'team_detail' team.id %}">
-        {% csrf_token %}
-        <label for="task_description">Task Description:</label>
-        <input type="text" name="description" id="task_description">
-        <label for="assigned_to">Assign To:</label>
-        <select name="assigned_to" multiple>
+  <div class="row justify-content-center align-items-center">
+    <div class="col-md-4 col-lg-4 order-lg-1">
+      <div class="card h-100 rounded-9 bg-dark text-light" style="border: none; padding: 27px;">
+        <h1 style="margin-bottom: 20px;"> Team Details: <span style="color: #30D5C8;">{{ team.name }}</span> </h1>
+        <h2 style="margin-bottom: 30px;">Members:</h2>
+        <ul>
           {% for member in team.members.all %}
-            <option value="{{ member.id }}">{{ member.username }}</option>
+            <li>{{ member.username }}</li>
           {% endfor %}
-        </select>
-        <label for="due_date">Due Date:</label>
-        <input type="date" name="due_date" id="due_date">
-        <button type="submit">Create Task</button>
-      </form>
+        </ul>
+        <a href="{% url 'send_invitations' team.id %}" class="btn btn-light btn-block" style="background-color: #30D5C8;">Invite Members</a>
+        <!-- Add the invite button -->
+      </div>
+    </div>
+    <div class="col-md-4 col-lg-4 order-lg-3">
+      <h2 class="align-top" style="color: #30D5C8;">Tasks:</h2>
+      {% if team_tasks %}
+        <ul>
+          {% for task in team_tasks %}
+            <li>
+              {{ task.description }} - Due: {{ task.due_date }}
+              <ul>
+                {% for assigned_user in task.assigned_to.all %}
+                  <li>{{ assigned_user.username }}</li>
+                {% endfor %}
+              </ul>
+            </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p>You currently have no tasks assigned.</p>
+      {% endif %}
+    </div>
+    <div class="col-md-4 col-lg-4 order-lg-2">
+      <div class="card h-100 rounded-9 bg-dark text-light" style="border: none; padding: 27px;">
+        <h2> <span style="color: #30D5C8;">Create</span> New Task </h2>
+        <form method="post" action="{% url 'team_detail' team.id %}">
+          {% csrf_token %}
+          <label for="task_description">Task Description:</label>
+          <input type="text" name="description" id="task_description">
+          <label for="assigned_to">Assign To:</label>
+          <select name="assigned_to" multiple>
+            {% for member in team.members.all %}
+              <option value="{{ member.id }}">{{ member.username }}</option>
+            {% endfor %}
+          </select>
+          <label for="due_date">Due Date:</label>
+          <input type="date" name="due_date" id="due_date">
+          <button type="submit" class="btn btn-light btn-block" style="background-color: #30D5C8;">Create Task</button>
+        </form>
+      </div>
     </div>
   </div>
 </div>
