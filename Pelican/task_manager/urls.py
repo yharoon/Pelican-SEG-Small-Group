@@ -29,5 +29,10 @@ urlpatterns = [
     path('profile/', views.ProfileUpdateView.as_view(), name='profile'),
     path('sign_up/', views.SignUpView.as_view(), name='sign_up'),
     path('team/', views.TeamCreateView.as_view(), name='team'),
-    path('team/<int:team_id>/', views.team_detail, name='team_detail'),  # Placeholder URL for team detail
+    path('team/<int:team_id>/', views.team_detail, name='team_detail'),
+    path('team/<int:team_id>/invite/send/', views.send_invitations, name='send_invitations'),
+    path('team/<int:team_id>/invitation/<int:invitation_id>/accept/', views.accept_invitation, name='accept_invitation'),
+    path('team/<int:team_id>/invitation/<int:invitation_id>/reject/', views.reject_invitation, name='reject_invitation'),
+    path('confirm-invitation/<int:invitation_id>/', views.confirm_invitation, name='confirm_invitation'),
+
 ]
