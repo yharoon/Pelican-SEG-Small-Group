@@ -4,35 +4,125 @@
 <style>
   /* Custom CSS for the dashboard */
   body {
-    background-color: black; /* Set the background color of the entire page to black */
-    color: white; /* Set text color to white for better readability */
+    background-color: black;
+    color: white;
+    font-family: 'Roboto Mono', monospace; /* Apply 'Roboto Mono' font to the body */
   }
 
   /* Define pastel colors for the cards */
   .card-pastel-blue {
-    background-color: #30D5C8; /* Pastel blue */
+    background-color: #343a40;
+    padding: 100px 20px; 
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    height: 150px; /* Set a fixed height for the cards */
+    transition: background-color 0.3s ease; /* Smooth transition effect */
   }
-  /* Add more classes for different pastel colors if needed */
-</style>
 
+  /* Change background color on hover */
+  .card-pastel-blue:hover {
+    background-color: #30D5C8;
+  }
+
+  /* Style the team names */
+  .card-title {
+    font-size: 32px;
+    text-align: center;
+    margin: 0;
+    padding: 20px 0;
+    color: white;
+  }
+
+  /* Style the hyperlink for team names */
+  .team-box {
+    text-decoration: none;
+    color: black;
+  }
+
+  /* On hover, change hyperlink color */
+  .team-box:hover {
+    color: darkgray;
+  }
+
+  .assigned-user {
+    font-style: italic;
+  }
+
+  /* Styling for notifications */
+  .notifications {
+    margin-top: 30px;
+    border-top: 1px solid #30D5C8;
+    padding-top: 20px;
+  }
+
+  .notifications-header {
+    color: #30D5C8;
+    font-size: 24px;
+    margin-bottom: 10px;
+  }
+
+  .no-notifications {
+    color: darkgray;
+  }
+</style>
 <div class="container">
   <div class="row">
     <div class="col-12">
-      <h1>Welcome to your dashboard {{ user.username }}</h1>
+      <h1>Welcome to your dashboard <span style="color: #30D5C8;">{{ user.username }}</span></h1>
     </div>
     <!-- Display user's teams -->
+    <h2 style="color: #30D5C8;">Your Teams:</h2>
     {% for team in user_teams %}
       <div class="col-md-4 mb-4">
         <a href="{% url 'team_detail' team.id %}" class="team-box">
-          <div class="card card-pastel-blue"> <!-- Apply different color classes to each card -->
+          <div class="card card-pastel-blue">
             <div class="card-body">
               <h5 class="card-title">{{ team.name }}</h5>
-              <!-- Display other team details if needed -->
             </div>
           </div>
         </a>
       </div>
     {% endfor %}
   </div>
+
+  <!-- Display tasks assigned to the user -->
+  <div class="row mt-4">
+    <div class="col-12">
+      <h2 style="color: #30D5C8;">Your Tasks:</h2>
+      <ul>
+        {% for task in user_tasks %}
+          <li>
+            {{ task.description }} - Due: {{ task.due_date }} - Team: {{ task.team.name }}
+            {% if request.user in task.assigned_to.all %}
+              <span class="assigned-user"></span>
+            {% endif %}
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+
+  <!-- Notifications section -->
+  <div class="notifications">
+    <h2 class="notifications-header">Notifications:</h2>
+    {% if user_notifications %}
+      {% for notification in user_notifications %}
+        <div>
+          {% if notification.invitation %}
+            <p>Invitation Team: {{ notification.invitation.team.name }}</p>
+          {% else %}
+            <p>No Associated Invitation</p>
+          {% endif %}
+          <a href="{% url 'confirm_invitation' notification.invitation.id %}">{{ notification.message }}</a>
+        </div>
+      {% endfor %}
+    {% else %}
+      <p class="no-notifications">You have no new notifications.</p>
+    {% endif %}
+  </div>
 </div>
+
 {% endblock %}
