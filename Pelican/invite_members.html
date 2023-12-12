@@ -1,0 +1,61 @@
+{% include 'base_content.html' %}
+
+{% block content %}
+<style>
+  /* Custom CSS for the dashboard */
+  body {
+    background-color: black;
+    color: white;
+    font-family: 'Roboto Mono', monospace;
+  }
+
+  /* Define pastel colors for the cards */
+  .card-pastel-blue {
+    background-color: #30D5C8;
+    padding: 20px;
+    border-radius: 10px;
+  }
+
+  /* Adjust alignment for form elements */
+  form {
+    display: flex;
+    flex-direction: column;
+  }
+
+  label,
+  select,
+  button {
+    margin-bottom: 10px;
+  }
+</style>
+
+<div class="container">
+  <!-- Row for content alignment, centered horizontally and vertically -->
+  <div class="row justify-content-center align-items-center">
+    <!-- Column for the card, with consistent width on medium and large screens -->
+    <div class="col-md-4 col-lg-4 order-lg-1">
+      <!-- Card with custom styles, full height, rounded corners, dark background, and light text -->
+      <div class="card h-100 rounded-9 bg-dark text-light" style="border: none; padding: 27px;">
+        <!-- Heading with a dynamic team name highlighted in a specific color -->
+        <h1 style="margin-bottom: 20px;"> Invite Members to <span style="color: #30D5C8;">{{ team.name }}</span> </h1>
+        <!-- Form for sending invitations, with POST method for data submission -->
+        <form method="post">
+          <!-- CSRF token for security in Django forms -->
+          {% csrf_token %}
+          <!-- Label for the multi-select dropdown -->
+          <label for="selected_users">Select users to invite:</label>
+          <!-- Multi-select dropdown to choose users, populates options from a Django context variable -->
+          <select name="selected_users" multiple>
+            {% for user in users_not_in_team %}
+              <option value="{{ user.id }}">{{ user.username }}</option>
+            {% endfor %}
+          </select>
+          <!-- Submit button with custom styling -->
+          <button type="submit" class="btn btn-light btn-block" style="background-color: #30D5C8;">Send Invitations</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+

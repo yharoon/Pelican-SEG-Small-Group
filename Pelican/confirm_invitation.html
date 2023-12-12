@@ -1,0 +1,53 @@
+{% include 'base_content.html' %} <!-- Include base content HTML -->
+
+{% block content %}
+<style>
+  /* Custom CSS for the dashboard */
+  body {
+    background-color: black; /* Set background color of the body to black */
+    color: white; /* Set text color to white */
+    font-family: 'Roboto Mono', monospace; /* Set the font family */
+  }
+
+  /* Define pastel colors for the cards */
+  .card-pastel-blue {
+    background-color: #30D5C8; /* Set background color for pastel blue cards */
+    padding: 20px; /* Add padding to the card */
+    border-radius: 10px; /* Round the corners of the card */
+  }
+
+  /* Adjust alignment for form elements */
+  form {
+    display: flex; /* Use flexbox for layout */
+    flex-direction: column; /* Stack elements vertically */
+  }
+
+  label,
+  input,
+  select,
+  button {
+    margin-bottom: 10px; /* Add space below each form element */
+  }
+</style>
+
+<div class="container">
+  <div class="row justify-content-center align-items-center">
+    <div class="col-md-4 col-lg-4 order-lg-1">
+      <!-- Card for invitation confirmation -->
+      <div class="card h-100 rounded-9 bg-dark text-light" style="border: none; padding: 27px;">
+        <h1 style="margin-bottom: 20px; color: #30D5C8;"> Invitation Confirmation </h1>
+        <!-- Display invitation details -->
+        <p>You have received an invitation to join <span style="color: #30D5C8;">{{ invitation.team.name }}</span>.</p>
+        <p>Please choose an action:</p>
+        <!-- Form for accepting or rejecting the invitation -->
+        <form method="post">
+          {% csrf_token %} <!-- CSRF token for security -->
+          <button type="submit" name="accept" class="btn btn-light btn-block" style="background-color: #30D5C8;">Accept</button>
+          <button type="submit" name="reject" class="btn btn-light btn-block" style="background-color: red;">Reject</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+

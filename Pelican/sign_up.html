@@ -1,0 +1,65 @@
+{% extends 'base_login.html' %} <!-- Extending from a base template named 'base_login.html' -->
+
+{% block content %} <!-- Starting the content block as defined in the base template -->
+
+<!-- Container with full viewport height and a black background -->
+<div class="container-fluid bg-black vh-100">
+  <!-- Row for centering the content both horizontally and vertically -->
+  <div class="row justify-content-center align-items-center h-100">
+    <!-- Empty column for spacing, ensuring center alignment of the main content -->
+    <div class="col-4">
+    </div>
+
+    <!-- Column containing the card with the sign-up form -->
+    <div class="col-4">
+      <!-- Card with custom styles: full height, rounded corners, dark background, light text -->
+      <div class="card h-99 rounded-9 bg-dark text-light" style="border: none; padding:27px;">
+        <!-- Heading for the form with custom font and color -->
+        <h1 class="typed-text" style="font-family: 'Roboto Mono', monospace; color:#30D5C8;">Sign up</h1>
+        
+        <!-- Form for signing up, POST method, action URL is obtained from Django's URL pattern -->
+        <form action="{% url 'sign_up' %}" method="post" class='sign_up'>
+          <!-- CSRF token for security, protecting against cross-site request forgery -->
+          {% csrf_token %}
+          <!-- Including a Django partial template for form rendering, passing the form as a context variable -->
+          {% include 'partials/bootstrap_form.html' with form=form %}
+          <!-- Submit button with custom styling -->
+          <input type="submit" value="Sign up" class="btn btn-primary" style="background-color: #30D5C8; color: black; border-color: aliceblue;">
+        </form>
+      </div>
+    </div>
+
+    <!-- Additional empty column for symmetric spacing on the right side -->
+    <div class="col-4">
+    </div>
+  </div>
+</div>
+
+
+
+
+<style>
+  /* Define the animation for typing effect */
+  @keyframes typing {
+    from { width: 0 }
+    to { width: 80% }
+  }
+
+  /* Apply the typing animation to the 'typed-text' class */
+  .typed-text {
+    overflow: hidden;
+    border-right: .15em solid white; /* Adjust the border to mimic typing cursor */
+    white-space: nowrap;
+    margin: 0 auto; /* Center the text */
+    letter-spacing: .1em; /* Adjust letter spacing for better appearance */
+    animation: typing 2s steps(30, end);
+  }
+
+  .sign_up {
+    font-family: 'Roboto Mono', monospace;
+    color:#30D5C8
+  
+  }
+</style>
+
+{% endblock %}

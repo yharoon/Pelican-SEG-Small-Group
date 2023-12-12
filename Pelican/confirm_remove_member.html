@@ -1,0 +1,55 @@
+{% include 'base_content.html' %} <!-- Includes the base HTML content from another file -->
+
+{% block content %}
+<style>
+  /* Custom CSS styles applied to the dashboard */
+  body {
+    background-color: black; /* Set the background color of the body to black */
+    color: white; /* Set the text color to white */
+    font-family: 'Roboto Mono', monospace; /* Use 'Roboto Mono' font for the text */
+  }
+
+  /* Styles for pastel blue colored cards */
+  .card-pastel-blue {
+    background-color: #30D5C8; /* Set background color of the card */
+    padding: 20px; /* Add padding inside the card */
+    border-radius: 10px; /* Round the corners of the card */
+  }
+
+  /* Styles to adjust alignment of form elements */
+  form {
+    display: flex; /* Display form elements in a flexible layout */
+    flex-direction: column; /* Stack form elements vertically */
+  }
+
+  /* Apply margin to labels, inputs, selects, and buttons */
+  label,
+  input,
+  select,
+  button {
+    margin-bottom: 10px; /* Add a bottom margin to space out elements */
+  }
+</style>
+
+<div class="container">
+  <div class="row justify-content-center align-items-center">
+    <div class="col-md-4 col-lg-4 order-lg-1">
+      <!-- Card for confirming member removal -->
+      <div class="card h-100 rounded-9 bg-dark text-light" style="border: none; padding: 27px;">
+        <h2 style="color: #30D5C8;">Confirm Removal</h2>
+        <!-- Display the username of the member to remove -->
+        <p>Are you sure you want to remove <span style="color: #30D5C8;">{{ member_to_remove.username }}</span> from the team?</p>
+        <!-- Form for confirming the removal -->
+        <form method="post">
+          {% csrf_token %} <!-- CSRF token for security -->
+          <button type="submit" class="btn btn-light btn-block" style="background-color: #30D5C8;">YES</button>
+        </form>
+        <!-- Link to go back without removing the member -->
+        <a href="{% url 'team_detail' team.id %}" class="btn btn-light btn-block" style="background-color: red;">NO</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+

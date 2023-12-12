@@ -1,0 +1,23 @@
+
+<div class="col-12">
+  <!-- Main heading indicating the creation of a team -->
+  <h1>Team Created</h1>
+
+  <!-- Subheading showing the name of the created team, dynamically filled -->
+  <h2>Team Name: {{ team_name }}</h2>
+
+  <!-- Subheading for the members section -->
+  <h3>Members:</h3>
+
+  <!-- Unordered list to display team members -->
+  <ul>
+    <!-- Loop through each member in the 'team_members' list -->
+    {% for member in team_members %}
+      <!-- List item for each member, displaying their username -->
+      <li>{{ member.username }}</li>
+    {% endfor %}
+  </ul>
+
+  <!-- Link to navigate back to the dashboard, URL generated from Django's URL patterns -->
+  <a href="{% url 'dashboard' %}">Back to Dashboard</a>
+</div>

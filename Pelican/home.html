@@ -1,0 +1,29 @@
+
+{% extends 'base.html' %}
+
+{% block body %}
+  <!-- Main container that fills the viewport height and has a black background -->
+  <div class="container-fluid bg-black vh-100">
+    <!-- Centered row for content alignment -->
+    <div class="row justify-content-center align-items-center h-100">
+      <!-- Column for the card, responsive with different widths for medium and large screens -->
+      <div class="col-md-6 col-lg-4">
+        <!-- Card with custom styles, rounded corners, dark background, and light text -->
+        <div class="card h-99 rounded-5 bg-dark text-light" style="border: none; padding: 27px; font-family: 'Roboto Mono', monospace;">
+          <!-- Heading of the card with custom color and font size -->
+          <h1 class="cover-heading" style="color: #30D5C8; font-size: 2.5rem;">Task Manager</h1>
+          <!-- Subtext with italicized team name -->
+          <p class="cover-text low-key" style="font-size: 1rem;">A task manager application by Team <i class="low-key">PELICAN</i></p>
+          <!-- Button for signing up, styled as small and light with a specific background color -->
+          <p>
+            <a href="{% url 'sign_up' %}" class="btn btn-sm btn-light" style="background-color: #30D5C8;">Sign up</a>
+          </p>
+          <!-- Button for logging in, styled similarly to the sign-up button -->
+          <p>
+            <a href="{% url 'log_in' %}" class="btn btn-sm btn-light" style="background-color: #30D5C8;">Log in</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

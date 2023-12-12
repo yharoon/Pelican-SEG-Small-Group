@@ -1,0 +1,160 @@
+{% include 'base_content.html' %} <!-- Includes the base HTML content from another file -->
+
+{% block content %}
+<style>
+  /* Custom CSS styles for the dashboard */
+  body {
+    background-color: black; /* Sets the background color of the body */
+    color: white; /* Sets the text color */
+    font-family: 'Roboto Mono', monospace; /* Applies 'Roboto Mono' font to the body */
+  }
+
+  /* Styles for cards with a pastel blue theme */
+  .card-pastel-blue {
+    background-color: #343a40; /* Sets the initial background color */
+    padding: 100px 20px; /* Sets padding inside the card */
+    border-radius: 10px; /* Rounds the corners of the card */
+    display: flex; /* Enables flexbox display */
+    justify-content: center; /* Centers items horizontally */
+    align-items: center; /* Centers items vertically */
+    flex-direction: column; /* Stacks items vertically */
+    height: 150px; /* Sets a fixed height for the cards */
+    transition: background-color 0.3s ease; /* Adds a transition effect for background color */
+  }
+
+  /* Changes background color when the user hovers over a card */
+  .card-pastel-blue:hover {
+    background-color: #30D5C8;
+  }
+
+  /* Styles for the titles on the cards */
+  .card-title {
+    font-size: 32px; /* Sets font size */
+    text-align: center; /* Aligns text to the center */
+    margin: 0;
+    padding: 20px 0; /* Adds padding above and below the text */
+    color: white; /* Sets text color */
+  }
+
+  /* Styles for hyperlinks in the team box */
+  .team-box {
+    text-decoration: none; /* Removes underline from links */
+    color: black; /* Sets text color for links */
+  }
+
+  /* Changes hyperlink color when hovered over */
+  .team-box:hover {
+    color: darkgray;
+  }
+
+  /* Styles for italicizing assigned user names */
+  .assigned-user {
+    font-style: italic;
+  }
+
+  /* CSS styles for notifications section */
+  .notifications {
+    margin-top: 30px; /* Adds a top margin */
+    border-top: 1px solid #30D5C8; /* Adds a top border */
+    padding-top: 20px; /* Adds padding at the top */
+  }
+
+  /* Styles for the notifications header */
+  .notifications-header {
+    color: #30D5C8; /* Sets the text color */
+    font-size: 24px; /* Sets the font size */
+    margin-bottom: 10px; /* Adds a bottom margin */
+  }
+
+  /* Styles for the 'no notifications' message */
+  .no-notifications {
+    color: darkgray; /* Sets the text color */
+  }
+</style>
+
+  <div class="container">
+    <!-- Row for the header section -->
+    <div class="row">
+      <!-- Full-width column for the welcome message -->
+      <div class="col-12">
+        <!-- Welcome message with the user's username dynamically displayed -->
+        <h1 style="margin-bottom: 40px;">Welcome to your dashboard <span style="color: #30D5C8;">{{ user.username }}</span></h1>
+      </div>
+  
+      <!-- Header for the user's teams section -->
+      <h2 style="color: #30D5C8;">Your Teams</h2>
+      <!-- Looping through each team the user is a part of -->
+      {% for team in user_teams %}
+        <!-- Column for each team, responsive for medium devices -->
+        <div class="col-md-4 mb-4">
+          <!-- Link to the team's detail page -->
+          <a href="{% url 'team_detail' team.id %}" class="team-box">
+            <!-- Card representing the team -->
+            <div class="card card-pastel-blue">
+              <!-- Card body containing the team name -->
+              <div class="card-body">
+                <h5 class="card-title">{{ team.name }}</h5>
+              </div>
+            </div>
+          </a>
+        </div>
+      {% endfor %}
+    </div>
+
+
+  <!-- Display tasks assigned to the user -->
+  <div class="row mt-4">
+    <!-- Full-width column for the tasks section -->
+    <div class="col-12">
+      <!-- Header for the tasks section -->
+      <h2 style="color: #30D5C8;">Your Tasks</h2>
+      <!-- Unordered list of tasks -->
+      <ul>
+        <!-- Looping through each task assigned to the user -->
+        {% for task in user_tasks %}
+          <li>
+            <!-- Displaying task description, due date, and associated team -->
+            {{ task.description }} - Due: {{ task.due_date }} - Team: {{ task.team.name }}
+            <!-- Conditional display for a special marker if the request user is assigned to the task -->
+            {% if request.user in task.assigned_to.all %}
+              <span class="assigned-user"></span>
+            {% endif %}
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+
+
+  <!-- Notifications section -->
+<div class="notifications">
+  <!-- Header for the notifications section -->
+  <h2 class="notifications-header">Notifications</h2>
+
+  <!-- Conditional statement to check if there are any user notifications -->
+  {% if user_notifications %}
+    <!-- Looping through each notification in the user_notifications list -->
+    {% for notification in user_notifications %}
+      <div>
+        <!-- Conditional statement to check if the notification is an invitation -->
+        {% if notification.invitation %}
+          <!-- Paragraph showing invitation details to join a team -->
+          <p>Invitation to join Team: {{ notification.invitation.team.name }}</p>
+        {% else %}
+          <!-- Paragraph displayed if there is no associated invitation with the notification -->
+          <p>No Associated Invitation</p>
+        {% endif %}
+        <!-- Link for the user to confirm the invitation, styled with a specific color -->
+        <a href="{% url 'confirm_invitation' notification.invitation.id %}" style="color: #F4C430;">{{ notification.message }}</a>
+      </div>
+    {% endfor %}
+  {% else %}
+    <!-- Paragraph displayed when there are no notifications -->
+    <p class="no-notifications">You have no new notifications.</p>
+  {% endif %}
+</div>
+
+
+{% endblock %}
+
+
