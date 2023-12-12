@@ -1,3 +1,5 @@
+
+
 {% include 'base_content.html' %}
 
 {% block content %}
@@ -71,10 +73,10 @@
 <div class="container">
   <div class="row">
     <div class="col-12">
-      <h1>Welcome to your dashboard <span style="color: #30D5C8;">{{ user.username }}</span></h1>
+      <h1 style="margin-bottom: 40px;">Welcome to your dashboard <span style="color: #30D5C8;">{{ user.username }}</span></h1>
     </div>
     <!-- Display user's teams -->
-    <h2 style="color: #30D5C8;">Your Teams:</h2>
+    <h2 style="color: #30D5C8;">Your Teams</h2>
     {% for team in user_teams %}
       <div class="col-md-4 mb-4">
         <a href="{% url 'team_detail' team.id %}" class="team-box">
@@ -91,7 +93,7 @@
   <!-- Display tasks assigned to the user -->
   <div class="row mt-4">
     <div class="col-12">
-      <h2 style="color: #30D5C8;">Your Tasks:</h2>
+      <h2 style="color: #30D5C8;">Your Tasks</h2>
       <ul>
         {% for task in user_tasks %}
           <li>
@@ -105,18 +107,19 @@
     </div>
   </div>
 
+
   <!-- Notifications section -->
   <div class="notifications">
-    <h2 class="notifications-header">Notifications:</h2>
+    <h2 class="notifications-header">Notifications</h2>
     {% if user_notifications %}
       {% for notification in user_notifications %}
         <div>
           {% if notification.invitation %}
-            <p>Invitation Team: {{ notification.invitation.team.name }}</p>
+            <p>Invitation to join Team: {{ notification.invitation.team.name }}</p>
           {% else %}
             <p>No Associated Invitation</p>
           {% endif %}
-          <a href="{% url 'confirm_invitation' notification.invitation.id %}">{{ notification.message }}</a>
+          <a href="{% url 'confirm_invitation' notification.invitation.id %}" style="color: #F4C430;">{{ notification.message }}</a>
         </div>
       {% endfor %}
     {% else %}
@@ -126,3 +129,4 @@
 </div>
 
 {% endblock %}
+
