@@ -110,7 +110,7 @@ class SignUpForm(NewPasswordMixin, forms.ModelForm):
         )
         return user
 
-
+'''
 class UsernameInputField(forms.CharField):
     def to_python(self, value):
         if value in self.empty_value:
@@ -124,11 +124,12 @@ class UsernameInputField(forms.CharField):
         if value is None:
             return None
         return "@".join([str(i) for i in value])
+'''
 
 class TeamForm(forms.ModelForm):
     class Meta:
         model = Team
-        fields = ['name', 'members']
+        fields = ['name', 'members', 'team_leader']
 
 class TaskForm(forms.ModelForm):
     class Meta:

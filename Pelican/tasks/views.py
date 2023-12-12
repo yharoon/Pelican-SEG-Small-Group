@@ -15,12 +15,11 @@ from django.shortcuts import get_object_or_404
 from .models import Task
 from .forms import TaskForm
 from django.http import HttpResponseRedirect
+from .models import Task
 
 @login_required
 def dashboard(request):
     current_user = request.user
-    print(current_user)  # Add this line for debugging
-
     team_form = TeamForm(request.POST or None)
 
     if request.method == 'POST' and team_form.is_valid():
@@ -31,12 +30,8 @@ def dashboard(request):
 
     # Fetching teams associated with the current user
     user_teams = Team.objects.filter(members=current_user)
-    print(user_teams)  # Add this line for debugging
 
     return render(request, 'dashboard.html', {'user': current_user, 'team_form': team_form, 'user_teams': user_teams})
-
-from django.shortcuts import get_object_or_404
-from .models import Task
 
 def team_detail(request, team_id):
     team = get_object_or_404(Team, pk=team_id)
@@ -201,9 +196,11 @@ class TeamCreateView(LoginRequiredMixin, FormView):
     def form_valid(self, form):
         team_name = form.cleaned_data['name']
         selected_members = form.cleaned_data['members']
+        team_leader = self.request.user
 
         new_team = Team.objects.create(name=team_name)
         new_team.members.add(*selected_members)
+        new_team.team_leader.add(team_leader)
         
         # Add the current user to the team
         new_team.members.add(self.request.user)
