@@ -135,3 +135,11 @@ class TaskForm(forms.ModelForm):
     class Meta:
         model = Task
         fields = ['name', 'description', 'due_date', 'assigned_to']
+
+class InviteForm(forms.Form):
+    users = forms.ModelMultipleChoiceField(queryset=User.objects.none())
+
+    def __init__(self, *args, **kwargs):
+        team = kwargs.pop('team')
+        super().__init__(*args, **kwargs)
+        self.fields['users'].queryset = User.objects.exclude(teams=team)

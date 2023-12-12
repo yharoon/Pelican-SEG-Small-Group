@@ -1,8 +1,48 @@
+<style>
+  /* Custom CSS for the dashboard */
+  body {
+    background-color: black;
+    color: white;
+    font-family: 'Roboto Mono', monospace;
+  }
+
+  /* Define pastel colors for the cards */
+  .card-pastel-blue {
+    background-color: #30D5C8; /* Pastel blue */
+  }
+
+  /* Adjust alignment for form elements */
+  form {
+    display: flex;
+    flex-direction: column;
+  }
+
+  label,
+  input,
+  select,
+  button {
+    margin-bottom: 10px;
+  }
+
+  /* Task Manager and Create Team link styles */
+  .navbar .navbar-brand.link {
+    color: white;
+    font-family: 'Roboto Mono', monospace;
+    transition: color 0.3s ease;
+  }
+
+  .navbar .navbar-brand.link:hover {
+    color: #30D5C8;
+  }
+</style>
+
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-3">
   <div class="container">
-    <a class="navbar-brand" href="{% url 'dashboard' %}">
+    <a class="navbar-brand link" href="{% url 'dashboard' %}">
       Task Manager
     </a>
+    <a class="navbar-brand link" href="{% url 'team' %}" style="margin-left: 30px;">Create Team</a>
+    <!-- Adjust the margin value as needed -->
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>

@@ -8,18 +8,17 @@ from django.shortcuts import redirect, render
 from django.views import View
 from django.views.generic.edit import FormView, UpdateView
 from django.urls import reverse
-from tasks.forms import LogInForm, PasswordForm, UserForm, SignUpForm, TeamForm
+from tasks.forms import LogInForm, PasswordForm, UserForm, SignUpForm, TeamForm, TaskForm
 from tasks.helpers import login_prohibited
-from .models import User, Team
+from .models import User, Team, Task, Invitation, Notification
 from django.shortcuts import get_object_or_404
-from .models import Task
-from .forms import TaskForm
 from django.http import HttpResponseRedirect
-from .models import Task
+from django.db.models import Q
 
 @login_required
 def dashboard(request):
     current_user = request.user
+    user_tasks = Task.objects.filter(assigned_to=current_user)
     team_form = TeamForm(request.POST or None)
 
     if request.method == 'POST' and team_form.is_valid():
@@ -31,7 +30,18 @@ def dashboard(request):
     # Fetching teams associated with the current user
     user_teams = Team.objects.filter(members=current_user)
 
-    return render(request, 'dashboard.html', {'user': current_user, 'team_form': team_form, 'user_teams': user_teams})
+    # Fetch notifications associated with the current user directly using Notification model
+    user_notifications = Notification.objects.filter(user=current_user)
+
+    return render(
+        request,
+        'dashboard.html',
+        {'user': current_user, 
+        'team_form': team_form, 
+        'user_teams': user_teams, 
+        'user_tasks': user_tasks, 
+        'user_notifications': user_notifications}
+    )
 
 def team_detail(request, team_id):
     team = get_object_or_404(Team, pk=team_id)
@@ -50,6 +60,100 @@ def team_detail(request, team_id):
     
     return render(request, 'team_detail.html', {'team': team, 'team_tasks': team_tasks, 'task_form': task_form})
 
+def remove_member(request, team_id, member_id):
+    team = get_object_or_404(Team, pk=team_id)
+    member_to_remove = get_object_or_404(User, pk=member_id)
+
+    if request.method == 'POST':
+        team.members.remove(member_to_remove)
+        return HttpResponseRedirect(reverse('team_detail', args=[team_id]))
+
+    return render(request, 'confirm_remove_member.html', {'team': team, 'member_to_remove': member_to_remove})
+
+def clear_received_invitations(request):
+    # Get the invitations sent to the current user
+    received_invitations = request.user.received_invitations.all()
+
+    # Delete all invitations sent to the current user
+    for invitation in received_invitations:
+        invitation.delete()
+
+    # Redirect to the dashboard or any appropriate page after clearing received invitations
+    return redirect('dashboard')
+
+def reset_user_data(request):
+    # Deleting User's Teams
+    user_teams = request.user.teams.all()
+    for team in user_teams:
+        team.delete()
+
+    # Deleting Sent Invitations
+    sent_invitations = request.user.sent_invitations.all()
+    for invitation in sent_invitations:
+        invitation.delete()
+
+    # Removing User from Received Invitations
+    received_invitations = request.user.received_invitations.all()
+    for invitation in received_invitations:
+        invitation.receiver.remove(request.user)
+
+    # Redirect to the dashboard or any appropriate page
+    return redirect('dashboard')  # Change 'dashboard' to your desired URL name
+
+def send_invitations(request, team_id):
+    team = get_object_or_404(Team, pk=team_id)
+
+    if request.method == 'POST':
+        selected_user_ids = request.POST.getlist('selected_users')
+        selected_users = User.objects.filter(pk__in=selected_user_ids)
+
+        for user in selected_users:
+            # Create an invitation for each selected user to join the team
+            invitation = Invitation.objects.create(sender=request.user, receiver=user, team=team)
+    
+            # Create a notification for the invited user and associate it with the invitation
+            notification = Notification.objects.create(user=user, message=f"Click here to join ", invitation=invitation)
+
+        messages.success(request, 'Invitations sent successfully!')
+        return redirect('team_detail', team_id=team_id)
+    else:
+        # Fetch users who are not already in the team
+        users_not_in_team = User.objects.exclude(id__in=team.members.all().values_list('id', flat=True))
+
+        return render(request, 'invite_members.html', {'team': team, 'users_not_in_team': users_not_in_team})
+
+def accept_invitation(request, invitation_id):
+    invitation = get_object_or_404(Invitation, pk=invitation_id)
+    invitation.accept()
+    return redirect('dashboard')  # Redirect to appropriate page after accepting
+
+def reject_invitation(request, invitation_id):
+    invitation = get_object_or_404(Invitation, pk=invitation_id)
+    invitation.decline()
+    return redirect('dashboard')  # Redirect to appropriate page after rejecting
+
+def confirm_invitation(request, invitation_id):
+    invitation = get_object_or_404(Invitation, pk=invitation_id)
+
+    if request.method == 'POST':
+        if 'accept' in request.POST:
+            # Accept the invitation
+            invitation.accept()
+        elif 'reject' in request.POST:
+            # Reject the invitation
+            invitation.decline()
+
+        # Delete the associated notification
+        try:
+            notification = Notification.objects.get(invitation=invitation)
+            notification.delete()
+        except Notification.DoesNotExist:
+            # Handle if the notification doesn't exist
+            raise Http404("Notification does not exist")
+
+        return redirect('dashboard')  # Redirect to the dashboard or any appropriate page
+
+    return render(request, 'confirm_invitation.html', {'invitation': invitation})
 
 @login_prohibited
 def home(request):
@@ -187,10 +291,19 @@ class TeamCreateView(LoginRequiredMixin, FormView):
 
     template_name = 'team.html'
     form_class = TeamForm
-
+    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['users'] = User.objects.all()  # Get all users from the database
+        search_term = self.request.GET.get('userSearch')
+        if search_term:
+            users = User.objects.filter(
+                Q(username__icontains=search_term) | 
+                Q(first_name__icontains=search_term) | 
+                Q(last_name__icontains=search_term)
+            )
+        else:
+            users = User.objects.all()
+        context['users'] = users
         return context
 
     def form_valid(self, form):
