@@ -20,6 +20,7 @@ from .models import Task
 from django.http import HttpResponseRedirect
 from tasks.models import Invitation
 from .models import Notification
+from django.db.models import Q
 
 @login_required
 def dashboard(request):
@@ -66,6 +67,47 @@ def team_detail(request, team_id):
     
     return render(request, 'team_detail.html', {'team': team, 'team_tasks': team_tasks, 'task_form': task_form})
 
+def remove_member(request, team_id, member_id):
+    team = get_object_or_404(Team, pk=team_id)
+    member_to_remove = get_object_or_404(User, pk=member_id)
+
+    if request.method == 'POST':
+        team.members.remove(member_to_remove)
+        return HttpResponseRedirect(reverse('team_detail', args=[team_id]))
+
+    return render(request, 'confirm_remove_member.html', {'team': team, 'member_to_remove': member_to_remove})
+
+def clear_received_invitations(request):
+    # Get the invitations sent to the current user
+    received_invitations = request.user.received_invitations.all()
+
+    # Delete all invitations sent to the current user
+    for invitation in received_invitations:
+        invitation.delete()
+
+    # Redirect to the dashboard or any appropriate page after clearing received invitations
+    return redirect('dashboard')
+
+def reset_user_data(request):
+    # Deleting User's Teams
+    user_teams = request.user.teams.all()
+    for team in user_teams:
+        team.delete()
+
+    # Deleting Sent Invitations
+    sent_invitations = request.user.sent_invitations.all()
+    for invitation in sent_invitations:
+        invitation.delete()
+
+    # Removing User from Received Invitations
+    received_invitations = request.user.received_invitations.all()
+    for invitation in received_invitations:
+        invitation.receiver.remove(request.user)
+
+    # Redirect to the dashboard or any appropriate page
+    return redirect('dashboard')  # Change 'dashboard' to your desired URL name
+
+
 def send_invitations(request, team_id):
     team = get_object_or_404(Team, pk=team_id)
 
@@ -78,7 +120,7 @@ def send_invitations(request, team_id):
             invitation = Invitation.objects.create(sender=request.user, receiver=user, team=team)
     
             # Create a notification for the invited user and associate it with the invitation
-            notification = Notification.objects.create(user=user, message=f"You have received an invitation to join {team.name}", invitation=invitation)
+            notification = Notification.objects.create(user=user, message=f"Click here to join ", invitation=invitation)
 
         messages.success(request, 'Invitations sent successfully!')
         return redirect('team_detail', team_id=team_id)
@@ -263,7 +305,16 @@ class TeamCreateView(LoginRequiredMixin, FormView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['users'] = User.objects.all()  # Get all users from the database
+        search_term = self.request.GET.get('userSearch')
+        if search_term:
+            users = User.objects.filter(
+                Q(username__icontains=search_term) | 
+                Q(first_name__icontains=search_term) | 
+                Q(last_name__icontains=search_term)
+            )
+        else:
+            users = User.objects.all()
+        context['users'] = users
         return context
 
     def form_valid(self, form):
