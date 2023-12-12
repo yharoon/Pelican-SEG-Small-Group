@@ -8,16 +8,52 @@ from django.shortcuts import redirect, render
 from django.views import View
 from django.views.generic.edit import FormView, UpdateView
 from django.urls import reverse
-from tasks.forms import LogInForm, PasswordForm, UserForm, SignUpForm
+from tasks.forms import LogInForm, PasswordForm, UserForm, SignUpForm, TeamForm
 from tasks.helpers import login_prohibited
-
+from .models import User, Team
+from django.shortcuts import get_object_or_404
+from .models import Task
+from .forms import TaskForm
+from django.http import HttpResponseRedirect
 
 @login_required
 def dashboard(request):
-    """Display the current user's dashboard."""
-
     current_user = request.user
-    return render(request, 'dashboard.html', {'user': current_user})
+    print(current_user)  # Add this line for debugging
+
+    team_form = TeamForm(request.POST or None)
+
+    if request.method == 'POST' and team_form.is_valid():
+        new_team = team_form.save()
+        new_team.members.add(current_user)
+        new_team.save()
+        return redirect('dashboard')
+
+    # Fetching teams associated with the current user
+    user_teams = Team.objects.filter(members=current_user)
+    print(user_teams)  # Add this line for debugging
+
+    return render(request, 'dashboard.html', {'user': current_user, 'team_form': team_form, 'user_teams': user_teams})
+
+from django.shortcuts import get_object_or_404
+from .models import Task
+
+def team_detail(request, team_id):
+    team = get_object_or_404(Team, pk=team_id)
+    task_form = TaskForm(request.POST or None)
+    
+    if request.method == 'POST' and task_form.is_valid():
+        new_task = task_form.save(commit=False)
+        new_task.team = team
+        new_task.save()
+        task_form.save_m2m()  # Save many-to-many relationships
+        
+        # Redirect to the team detail page after creating the task
+        return HttpResponseRedirect(request.path_info)
+        
+    team_tasks = Task.objects.filter(team=team)
+    
+    return render(request, 'team_detail.html', {'team': team, 'team_tasks': team_tasks, 'task_form': task_form})
 
 
 @login_prohibited
@@ -25,7 +61,6 @@ def home(request):
     """Display the application's start/home screen."""
 
     return render(request, 'home.html')
-
 
 class LoginProhibitedMixin:
     """Mixin that redirects when a user is logged in."""
@@ -151,3 +186,29 @@ class SignUpView(LoginProhibitedMixin, FormView):
 
     def get_success_url(self):
         return reverse(settings.REDIRECT_URL_WHEN_LOGGED_IN)
+
+class TeamCreateView(LoginRequiredMixin, FormView):
+    """Display team creation screen and handle team creation."""
+
+    template_name = 'team.html'
+    form_class = TeamForm
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['users'] = User.objects.all()  # Get all users from the database
+        return context
+
+    def form_valid(self, form):
+        team_name = form.cleaned_data['name']
+        selected_members = form.cleaned_data['members']
+
+        new_team = Team.objects.create(name=team_name)
+        new_team.members.add(*selected_members)
+        
+        # Add the current user to the team
+        new_team.members.add(self.request.user)
+        
+        team_members = new_team.members.all()
+
+        # Redirect to the team detail page after creating the team
+        return HttpResponseRedirect(reverse('team_detail', args=[new_team.id]))
