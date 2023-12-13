@@ -64,9 +64,12 @@ def remove_member(request, team_id, member_id):
     team = get_object_or_404(Team, pk=team_id)
     member_to_remove = get_object_or_404(User, pk=member_id)
 
-    if request.method == 'POST':
+    if request.method == 'POST' and team.has_team_leader_perms(request.user):
         team.members.remove(member_to_remove)
         return HttpResponseRedirect(reverse('team_detail', args=[team_id]))
+
+    else:
+        messages.add_message(request, messages.ERROR, "Only Team Leaders can remove members, You are not a Team Leader")
 
     return render(request, 'confirm_remove_member.html', {'team': team, 'member_to_remove': member_to_remove})
 
