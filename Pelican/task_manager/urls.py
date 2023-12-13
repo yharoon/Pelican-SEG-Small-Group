@@ -35,6 +35,4 @@ urlpatterns = [
     path('team/<int:team_id>/invitation/<int:invitation_id>/reject/', views.reject_invitation, name='reject_invitation'),
     path('confirm-invitation/<int:invitation_id>/', views.confirm_invitation, name='confirm_invitation'),
     path('team/<int:team_id>/remove/<int:member_id>/', views.remove_member, name='remove_member'),
-    path('clear_received_invitations/', views.clear_received_invitations, name='clear_received_invitations'),
-    path('clear_user_data/', views.reset_user_data, name='reset_user_data'),  # Adding the new URL path
 ]
