@@ -8,18 +8,11 @@ from django.shortcuts import redirect, render
 from django.views import View
 from django.views.generic.edit import FormView, UpdateView
 from django.urls import reverse
-from tasks.forms import LogInForm, PasswordForm, UserForm, SignUpForm, TeamForm
 from tasks.helpers import login_prohibited
-from .models import User, Team
 from django.shortcuts import get_object_or_404
-from .models import Task
-from .forms import TaskForm
 from django.http import HttpResponseRedirect
-from django.shortcuts import get_object_or_404
-from .models import Task
-from django.http import HttpResponseRedirect
-from tasks.models import Invitation
-from .models import Notification
+from tasks.models import Invitation, Task, Notification, User, Team
+from tasks.forms import LogInForm, PasswordForm, UserForm, SignUpForm, TeamForm, TaskForm
 from django.db.models import Q
 
 @login_required
@@ -76,36 +69,6 @@ def remove_member(request, team_id, member_id):
         return HttpResponseRedirect(reverse('team_detail', args=[team_id]))
 
     return render(request, 'confirm_remove_member.html', {'team': team, 'member_to_remove': member_to_remove})
-
-def clear_received_invitations(request):
-    # Get the invitations sent to the current user
-    received_invitations = request.user.received_invitations.all()
-
-    # Delete all invitations sent to the current user
-    for invitation in received_invitations:
-        invitation.delete()
-
-    # Redirect to the dashboard or any appropriate page after clearing received invitations
-    return redirect('dashboard')
-
-def reset_user_data(request):
-    # Deleting User's Teams
-    user_teams = request.user.teams.all()
-    for team in user_teams:
-        team.delete()
-
-    # Deleting Sent Invitations
-    sent_invitations = request.user.sent_invitations.all()
-    for invitation in sent_invitations:
-        invitation.delete()
-
-    # Removing User from Received Invitations
-    received_invitations = request.user.received_invitations.all()
-    for invitation in received_invitations:
-        invitation.receiver.remove(request.user)
-
-    # Redirect to the dashboard or any appropriate page
-    return redirect('dashboard')  # Change 'dashboard' to your desired URL name
 
 
 def send_invitations(request, team_id):
