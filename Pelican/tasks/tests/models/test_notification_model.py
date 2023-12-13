@@ -24,7 +24,7 @@ class NotificationModelTestCase(TestCase):
         self.assert_task_is_invalid()
     
     def test_notifcation_isnt_too_large(self):
-          self.message = "a"*244
+          self.message = "a"*254
           self._assert_task_is_valid()
     
     def test_invitation_notification_integrity(self):
