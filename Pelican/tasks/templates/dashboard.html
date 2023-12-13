@@ -1,10 +1,39 @@
-{% extends 'base_content.html' %}
+{% include 'base_content.html' %}
+
 {% block content %}
+<style>
+  /* Custom CSS for the dashboard */
+  body {
+    background-color: black; /* Set the background color of the entire page to black */
+    color: white; /* Set text color to white for better readability */
+    font-family: 'Roboto Mono', monospace; color: white;
+  }
+
+  /* Define pastel colors for the cards */
+  .card-pastel-blue {
+    background-color: #30D5C8; /* Pastel blue */
+  }
+  /* Add more classes for different pastel colors if needed */
+</style>
+
 <div class="container">
   <div class="row">
     <div class="col-12">
       <h1>Welcome to your dashboard {{ user.username }}</h1>
     </div>
+    <!-- Display user's teams -->
+    {% for team in user_teams %}
+      <div class="col-md-4 mb-4">
+        <a href="{% url 'team_detail' team.id %}" class="team-box">
+          <div class="card card-pastel-blue"> <!-- Apply different color classes to each card -->
+            <div class="card-body">
+              <h5 class="card-title">{{ team.name }}</h5>
+              <!-- Display other team details if needed -->
+            </div>
+          </div>
+        </a>
+      </div>
+    {% endfor %}
   </div>
 </div>
 {% endblock %}
