@@ -1,0 +1,53 @@
+{% extends 'base_content.html' %}
+{% block content %}
+<style>
+  /* Custom CSS for the dashboard */
+  body {
+    background-color: black; /* Set the background color of the entire page to black */
+    color: white; /* Set text color to white for better readability */
+    font-family: 'Roboto Mono', monospace; color: white;
+  }
+
+  /* Define pastel colors for the cards */
+  .card-pastel-blue {
+    background-color: #30D5C8; /* Pastel blue */
+  }
+  /* Add more classes for different pastel colors if needed */
+
+  .center {
+  border: 5px solid;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 10px;
+}
+</style>
+
+<div class="container">
+  <div class="row justify-content-center align-items-center h-100">
+    <div class = "col-4">
+    </div>
+    <div class = "col-4">
+      <div class = "card h-99 rounded-9 bg-dark text-light" style = "border: none; padding:27px;">
+        <h1>Create your team</h1>
+      <form method="post">
+        {% csrf_token %}
+        <label for="id_name">Team Name:</label>
+        <input type="text" name="name" id="id_name">
+        <label for="id_members">Select Members:</label>
+        <div id="id_members">
+          {% for user in users %}
+            <input type="checkbox" id="user_{{ user.id }}" name="members" value="{{ user.id }}">
+            <label for="user_{{ user.id }}">{{ user.username }}</label><br>
+          {% endfor %}
+        </div>
+        <button class = 'card-pastel-blue btn btn-light btn-block' type ="submit">Create</button>
+      </form>
+      </div>
+    </div>
+    <div class = "col-4">
+    </div>
+  </div>
+</div>
+{% endblock %}
