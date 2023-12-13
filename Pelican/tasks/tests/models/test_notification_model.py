@@ -5,6 +5,11 @@ from django.test import TestCase
 from tasks.models import User,Team,Invitation,Notification
 
 class NotificationModelTestCase(TestCase):
+
+    fixtures = [
+        'tasks/tests/fixtures/users_for_teams_tasks.json',
+    ]
+    
     def setUp(self):
         self.user = User.objects.get(username = '@johndoe')
         self.message = "message"
