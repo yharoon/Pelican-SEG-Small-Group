@@ -2,8 +2,7 @@
 from django import forms
 from django.contrib.auth import authenticate
 from django.core.validators import RegexValidator
-from .models import User, Team
-from .models import Task
+from .models import User, Team, Task
 
 class LogInForm(forms.Form):
     """Form enabling registered users to log in."""
