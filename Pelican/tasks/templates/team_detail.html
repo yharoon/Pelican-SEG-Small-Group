@@ -1,0 +1,68 @@
+{% include 'base_content.html' %}
+
+{% block content %}
+<style>
+  /* Custom CSS for the dashboard */
+  body {
+    background-color: black; /* Set the background color of the entire page to black */
+    color: white; /* Set text color to white for better readability */
+    font-family: 'Roboto Mono', monospace; color: white;
+  }
+
+  /* Define pastel colors for the cards */
+  .card-pastel-blue {
+    background-color: #30D5C8; /* Pastel blue */
+  }
+  /* Add more classes for different pastel colors if needed */
+</style>
+
+<div class="container">
+  <div class="row  justify-content-center align-items-center h-100">
+    <div class="col-md-4 col-lg-4 order-lg-1">
+      <div class = "card h-99 rounded-9 bg-dark text-light" style="border: none; padding: 27px;">
+        <h1>Team Details: {{ team.name }}</h1>
+      <h2>Members:</h2>
+      <ul>
+        {% for member in team.members.all %}
+          <li>{{ member.username }}</li>
+        {% endfor %}
+      </ul>
+      </div>
+    </div>
+    <div class="col-md-4 col-lg-4 order-lg-3">
+        <h2>Tasks</h2>
+        <ul>
+          {% for task in team_tasks %}
+            <li>
+              {{ task.description }} - Due: {{ task.due_date }}
+              <ul>
+                {% for assigned_user in task.assigned_to.all %}
+                  <li>{{ assigned_user.username }}</li>
+                {% endfor %}
+              </ul>
+            </li>
+          {% endfor %}
+        </ul>
+    </div>
+    <div class="col-md-4 col-lg-4 order-lg-2">
+      <h2>Create New Task</h2>
+      <form method="post" action="{% url 'team_detail' team.id %}">
+        {% csrf_token %}
+        <label for="task_description">Task Description:</label>
+        <input type="text" name="description" id="task_description">
+        <label for="assigned_to">Assign To:</label>
+        <select name="assigned_to" multiple>
+          {% for member in team.members.all %}
+            <option value="{{ member.id }}">{{ member.username }}</option>
+          {% endfor %}
+        </select>
+        <label for="due_date">Due Date:</label>
+        <input type="date" name="due_date" id="due_date">
+        <button type="submit">Create Task</button>
+      </form>
+  </div>
+  </div>
+
+  </div>
+</div>
+{% endblock %}
