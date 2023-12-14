@@ -1,82 +1,14 @@
-
-
 {% include 'base_content.html' %}
 
 {% block content %}
-<style>
-  /* Custom CSS for the dashboard */
-  body {
-    background-color: black;
-    color: white;
-    font-family: 'Roboto Mono', monospace; /* Apply 'Roboto Mono' font to the body */
-  }
 
-  /* Define pastel colors for the cards */
-  .card-pastel-blue {
-    background-color: #343a40;
-    padding: 100px 20px; 
-    border-radius: 10px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    height: 150px; /* Set a fixed height for the cards */
-    transition: background-color 0.3s ease; /* Smooth transition effect */
-  }
-
-  /* Change background color on hover */
-  .card-pastel-blue:hover {
-    background-color: #30D5C8;
-  }
-
-  /* Style the team names */
-  .card-title {
-    font-size: 32px;
-    text-align: center;
-    margin: 0;
-    padding: 20px 0;
-    color: white;
-  }
-
-  /* Style the hyperlink for team names */
-  .team-box {
-    text-decoration: none;
-    color: black;
-  }
-
-  /* On hover, change hyperlink color */
-  .team-box:hover {
-    color: darkgray;
-  }
-
-  .assigned-user {
-    font-style: italic;
-  }
-
-  /* Styling for notifications */
-  .notifications {
-    margin-top: 30px;
-    border-top: 1px solid #30D5C8;
-    padding-top: 20px;
-  }
-
-  .notifications-header {
-    color: #30D5C8;
-    font-size: 24px;
-    margin-bottom: 10px;
-  }
-
-  .no-notifications {
-    color: darkgray;
-  }
-</style>
 <div class="container">
   <div class="row">
     <div class="col-12">
-      <h1 style="margin-bottom: 40px;">Welcome to your dashboard <span style="color: #30D5C8;">{{ user.username }}</span></h1>
+      <h1 class="welcome;">Welcome to your dashboard <span class="username">{{ user.username }}</span></h1>
     </div>
     <!-- Display user's teams -->
-    <h2 style="color: #30D5C8;">Your Teams</h2>
+    <h2 >Your Teams</h2>
     {% for team in user_teams %}
       <div class="col-md-4 mb-4">
         <a href="{% url 'team_detail' team.id %}" class="team-box">
@@ -93,7 +25,7 @@
   <!-- Display tasks assigned to the user -->
   <div class="row mt-4">
     <div class="col-12">
-      <h2 style="color: #30D5C8;">Your Tasks</h2>
+      <h2>Your Tasks</h2>
       <ul>
         {% for task in user_tasks %}
           <li>
@@ -119,7 +51,7 @@
           {% else %}
             <p>No Associated Invitation</p>
           {% endif %}
-          <a href="{% url 'confirm_invitation' notification.invitation.id %}" style="color: #F4C430;">{{ notification.message }}</a>
+          <a href="{% url 'confirm_invitation' notification.invitation.id %}" class ="confirm-invitation">{{ notification.message }}</a>
         </div>
       {% endfor %}
     {% else %}
@@ -129,4 +61,6 @@
 </div>
 
 {% endblock %}
+
+
 
