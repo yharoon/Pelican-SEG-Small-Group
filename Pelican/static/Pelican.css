@@ -25,7 +25,50 @@
 
 h1.team{
     color: #30D5C8;
-} 
+}
+
+
+
+h1.invite{
+    margin-bottom: 20px;
+}
+
+form {
+
+    display: flex;
+    flex-direction: column;
+}
+
+ /* Adjust alignment for form elements */
+
+label,
+input,
+select,
+button {
+    margin-bottom: 10px;
+}
+
+
+  /* Align text to the top */
+.align-top {
+    align-items: flex-start !important;
+}
+
+  /* Increase padding between members */
+ul {
+    padding-left: 0;
+    list-style: none;
+  }
+
+li {
+    margin-bottom: 15px;
+  }
+
+
+.forgot_password{
+    font-family: 'Roboto Mono', monospace;
+    color:#30D5C8
+}
 
 h1.typed-text{
     font-family: 'Roboto Mono', monospace;
@@ -39,6 +82,7 @@ h1.typed-text{
     animation: typing 2s steps(30, end);
 
 }
+
 
 h1.cover-heading {
     color: #30D5C8;
@@ -68,7 +112,7 @@ span.text-turquoise{
 
 }
 
-span.username{
+span{
     color: #30D5C8;
 
 }
@@ -89,6 +133,21 @@ span.username{
 
 }
 
+.btn-sm {
+    padding: 5px 10px;
+    font-size: 12px;
+}
+.btn-sm.btn-danger {
+    padding: 3px 8px; /* Adjust padding for a smaller size */
+    font-size: 10px; /* Modify font size */
+    background-color: red; /* Set the background color to red */
+  }
+
+.btn.btn-light.btn-block.reject{
+    background-color: red;
+
+}
+
 body {
     background-color: black;
     color: white;
@@ -96,7 +155,7 @@ body {
   }
 
   /* Define pastel colors for the cards */
-  .card-pastel-blue {
+.card-pastel-blue {
     background-color: #343a40;
     padding: 100px 20px; 
     border-radius: 10px;
@@ -106,58 +165,81 @@ body {
     flex-direction: column;
     height: 150px; /* Set a fixed height for the cards */
     transition: background-color 0.3s ease; /* Smooth transition effect */
-  }
+}
+
+ 
 
   /* Change background color on hover */
-  .card-pastel-blue:hover {
+.card-pastel-blue:hover {
     background-color: #30D5C8;
-  }
+}
 
   /* Style the team names */
-  .card-title {
+.card-title {
     font-size: 32px;
     text-align: center;
     margin: 0;
     padding: 20px 0;
     color: white;
-  }
+}
 
   /* Style the hyperlink for team names */
-  .team-box {
+.team-box {
     text-decoration: none;
     color: black;
-  }
+}
 
   /* On hover, change hyperlink color */
-  .team-box:hover {
+.team-box:hover {
     color: darkgray;
-  }
+}
 
-  .assigned-user {
+.assigned-user {
     font-style: italic;
-  }
+}
 
   /* Styling for notifications */
-  .notifications {
+.notifications {
     margin-top: 30px;
     border-top: 1px solid #30D5C8;
     padding-top: 20px;
-  }
+}
 
-  .notifications-header {
+.notifications-header {
     color: #30D5C8;
     font-size: 24px;
     margin-bottom: 10px;
-  }
+}
 
-  .no-notifications {
+.no-notifications {
     color: darkgray;
+}
+
+  h1.invitation_confrim{
+    margin-bottom: 20px;
+    color: #30D5C8;
+
   }
 
-  .confirm-invitation{
+
+.confirm-invitation{
     color: #F4C430;
-  }
+}
 
+.navbar-brand.link{
+    margin-left: 30px;
+}
+
+/* Task Manager and Create Team link styles */
+.navbar .navbar-brand.link {
+    color: white;
+    font-family: 'Roboto Mono', monospace;
+    transition: color 0.3s ease;
+}
+
+.navbar .navbar-brand.link:hover {
+    color: #30D5C8;
+}
 
 
 
