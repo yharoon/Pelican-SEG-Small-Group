@@ -1,46 +1,17 @@
 {% include 'base_content.html' %}
 
 {% block content %}
-<style>
-  /* Custom CSS for the dashboard */
-  body {
-    background-color: black;
-    color: white;
-    font-family: 'Roboto Mono', monospace;
-  }
-
-  /* Define pastel colors for the cards */
-  .card-pastel-blue {
-    background-color: #30D5C8;
-    padding: 20px;
-    border-radius: 10px;
-  }
-
-  /* Adjust alignment for form elements */
-  form {
-    display: flex;
-    flex-direction: column;
-  }
-
-  label,
-  input,
-  select,
-  button {
-    margin-bottom: 10px;
-  }
-</style>
-
 <div class="container">
   <div class="row justify-content-center align-items-center">
     <div class="col-md-4 col-lg-4 order-lg-1">
-      <div class="card h-100 rounded-9 bg-dark text-light" style="border: none; padding: 27px;">
-        <h1 style="margin-bottom: 20px; color: #30D5C8;"> Invitation Confirmation </h1>
-        <p>You have received an invitation to join <span style="color: #30D5C8;">{{ invitation.team.name }}</span>.</p>
+      <div class="card h-100 rounded-9 bg-dark text-light" >
+        <h1 class = "confirm-invitation"> Invitation Confirmation </h1>
+        <p>You have received an invitation to join <span>{{ invitation.team.name }}</span>.</p>
         <p>Please choose an action:</p>
         <form method="post">
           {% csrf_token %}
-          <button type="submit" name="accept" class="btn btn-light btn-block" style="background-color: #30D5C8;">Accept</button>
-          <button type="submit" name="reject" class="btn btn-light btn-block" style="background-color: red;">Reject</button>
+          <button type="submit" name="accept" class="btn btn-light btn-block" >Accept</button>
+          <button type="submit" name="reject" class="btn btn-light btn-block reject">Reject</button>
         </form>
       </div>
     </div>
