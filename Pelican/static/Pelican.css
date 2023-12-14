@@ -32,6 +32,15 @@ h1.cover-heading {
     font-size: 2.5rem;
 }
 
+h1.welcome{
+    margin-bottom: 40px;
+}
+
+h2 {
+    color: #30D5C8;
+
+}
+
 p.cover-text {
     font-size: 1rem;
 }
@@ -43,6 +52,11 @@ p.text-white{
 span.text-turquoise{
     color: #30D5C8;
     font-size: 33px"
+
+}
+
+span.username{
+    color: #30D5C8;
 
 }
 
@@ -61,4 +75,77 @@ span.text-turquoise{
     border-color: aliceblue;
 
 }
+
+body {
+    background-color: black;
+    color: white;
+    font-family: 'Roboto Mono', monospace; /* Apply 'Roboto Mono' font to the body */
+  }
+
+  /* Define pastel colors for the cards */
+  .card-pastel-blue {
+    background-color: #343a40;
+    padding: 100px 20px; 
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    height: 150px; /* Set a fixed height for the cards */
+    transition: background-color 0.3s ease; /* Smooth transition effect */
+  }
+
+  /* Change background color on hover */
+  .card-pastel-blue:hover {
+    background-color: #30D5C8;
+  }
+
+  /* Style the team names */
+  .card-title {
+    font-size: 32px;
+    text-align: center;
+    margin: 0;
+    padding: 20px 0;
+    color: white;
+  }
+
+  /* Style the hyperlink for team names */
+  .team-box {
+    text-decoration: none;
+    color: black;
+  }
+
+  /* On hover, change hyperlink color */
+  .team-box:hover {
+    color: darkgray;
+  }
+
+  .assigned-user {
+    font-style: italic;
+  }
+
+  /* Styling for notifications */
+  .notifications {
+    margin-top: 30px;
+    border-top: 1px solid #30D5C8;
+    padding-top: 20px;
+  }
+
+  .notifications-header {
+    color: #30D5C8;
+    font-size: 24px;
+    margin-bottom: 10px;
+  }
+
+  .no-notifications {
+    color: darkgray;
+  }
+
+  .confirm-invitation{
+    color: #F4C430;
+  }
+
+
+
+
 
