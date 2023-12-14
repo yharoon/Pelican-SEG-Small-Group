@@ -1,0 +1,51 @@
+.container-fluid {
+    background-color: #000;
+    height: 100vh;
+}
+
+.card {
+    border: none;
+    padding: 27px;
+    font-family: 'Roboto Mono', monospace;
+}
+
+@keyframes typing {
+    from { width: 0 }
+    to { width: 80% }
+  }
+
+h1.typed-text{
+    font-family: 'Roboto Mono', monospace;
+    color: #30D5C8;
+    font-size: 33px;
+    overflow: hidden;
+    border-right: .15em solid white; /* Adjust the border to mimic typing cursor */
+    white-space: nowrap;
+    margin: 0 auto; /* Center the text */
+    letter-spacing: .1em; /* Adjust letter spacing for better appearance */
+    animation: typing 2s steps(30, end);
+
+}
+
+h1.cover-heading {
+    color: #30D5C8;
+    font-size: 2.5rem;
+}
+
+p.cover-text {
+    font-size: 1rem;
+}
+
+p.text-white{
+    font-family: 'Roboto Mono', monospace;
+}
+
+span.text-turquoise{
+    color: #30D5C8;
+    font-size: 33px"
+
+}
+
+.btn {
+    background-color: #30D5C8;
+}
