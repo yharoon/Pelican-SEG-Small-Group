@@ -12,7 +12,7 @@ user_fixtures = [
 class Command(BaseCommand):
     """Build automation command to seed the database."""
 
-    USER_COUNT = 20
+    USER_COUNT = 5
     TEAM_COUNT = 5
     TASK_COUNT = 5
     DEFAULT_PASSWORD = 'Password123'
@@ -33,12 +33,11 @@ class Command(BaseCommand):
         self.create_tasks()
 
     def create_tasks(self):
-        task_count = Task.objects.count()
+        task_count = 0
         while task_count < self.TASK_COUNT:
             print(f"Seeding task {task_count}/{self.TASK_COUNT}", end='\r')
             self.generate_task()
-            #task_count = Task.objects.count()
-            task_count += 1
+            task_count = Task.objects.count()
         print("Task seeding complete.")
 
     def generate_task(self):
@@ -90,7 +89,7 @@ class Command(BaseCommand):
         fixture_team.members.add(User.objects.get(username = "@charlie"))
 
     def generate_random_teams(self):
-        team_count = Team.objects.count()
+        team_count = 0
         while team_count < self.TEAM_COUNT:
             print(f"Seeding team {team_count}/{self.TEAM_COUNT}", end='\r')
             self.generate_team()
@@ -100,7 +99,8 @@ class Command(BaseCommand):
     def generate_team(self):
         number_of_members = randint(1,self.USER_COUNT)
         team_members = sample(self.all_usernames, number_of_members)
-        team_name = team_members[0][0] + "_team"
+        team_leader = sample(self.all_usernames, 1)[0][0]
+        team_name = team_leader + "_team"
         self.try_create_team({"team_name":team_name,
                             "team_members":team_members})
 

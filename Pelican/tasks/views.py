@@ -310,7 +310,7 @@ class TeamCreateView(LoginRequiredMixin, FormView):
         team_name = form.cleaned_data['name']
         selected_members = form.cleaned_data['members']
 
-        new_team = Team.objects.create(name=team_name)
+        new_team = Team.objects.create(name = team_name)
         new_team.members.add(*selected_members)
         
         # Add the current user to the team
@@ -318,5 +318,5 @@ class TeamCreateView(LoginRequiredMixin, FormView):
         
         team_members = new_team.members.all()
 
-        # Redirect to the team detail page after creating the team
-        return HttpResponseRedirect(reverse('team_detail', args=[new_team.id]))
+        # Redirect to the send invitations page after creating the team
+        return HttpResponseRedirect(reverse('send_invitations', args=[new_team.id]))
