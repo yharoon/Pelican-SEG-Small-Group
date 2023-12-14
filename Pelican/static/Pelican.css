@@ -9,10 +9,23 @@
     font-family: 'Roboto Mono', monospace;
 }
 
+.center {
+    border: 5px solid;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 10px;
+  }
+
 @keyframes typing {
     from { width: 0 }
     to { width: 80% }
   }
+
+h1.team{
+    color: #30D5C8;
+} 
 
 h1.typed-text{
     font-family: 'Roboto Mono', monospace;
@@ -144,6 +157,8 @@ body {
   .confirm-invitation{
     color: #F4C430;
   }
+
+
 
 
 
