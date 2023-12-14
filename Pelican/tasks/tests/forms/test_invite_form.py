@@ -5,3 +5,5 @@ from django import forms
 from django.http import HttpRequest
 from django.conf import settings
 
+class InviteFormTestCase(TestCase):
+	

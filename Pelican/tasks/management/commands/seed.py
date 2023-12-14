@@ -84,8 +84,7 @@ class Command(BaseCommand):
         self.generate_random_teams()
 
     def generate_user_teams(self):
-        fixture_team = Team.objects.create(name = "fixture_team", 
-            team_leader = User.objects.get(username = "@johndoe"))
+        fixture_team = Team.objects.create(name = "fixture_team")
         fixture_team.members.add(User.objects.get(username = "@johndoe"))
         fixture_team.members.add(User.objects.get(username = "@janedoe"))
         fixture_team.members.add(User.objects.get(username = "@charlie"))
@@ -101,11 +100,9 @@ class Command(BaseCommand):
     def generate_team(self):
         number_of_members = randint(1,self.USER_COUNT)
         team_members = sample(self.all_usernames, number_of_members)
-        team_leader = sample(team_members, 1)
-        team_name = team_leader[0][0] + "_team"
+        team_name = team_members[0][0] + "_team"
         self.try_create_team({"team_name":team_name,
-                                "team_members":team_members,
-                                "team_leader":team_leader})
+                            "team_members":team_members})
 
     def try_create_team(self,data):
         try:
@@ -115,9 +112,7 @@ class Command(BaseCommand):
 
     def create_team(self,data):
         generate_team = Team.objects.create(
-            name = data["team_name"],
-            team_leader = User.objects.get(username = data["team_leader"][0][0])
-            )
+            name = data["team_name"])
         for member in data["team_members"]:
             generate_team.members.add(User.objects.get(username = member[0]))
 

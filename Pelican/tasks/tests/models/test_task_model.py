@@ -1,6 +1,7 @@
 """Test for Task Model"""
 
-from django.core.exceptions import ValidationError, IntegrityError
+from django.core.exceptions import ValidationError
+from django.db import IntegrityError
 from django.test import TestCase
 from tasks.models import Task
 
@@ -37,19 +38,19 @@ class TaskModelTestCase(TestCase):
 		self.task.assigned_to.add(self.assigned_to)
 
 	def test_description_can_be_blank(self):
-		self.description = ""
+		self.task.description = ""
 		self._assert_task_is_valid()
 
 	def test_description_is_too_large(self):
-		self.description = "a"*256
+		self.task.description = "a"*256
 		self._assert_task_is_invalid()
 
 	def test_description_isnt_too_large(self):
-		self.description = "a"*254
+		self.task.description = "a"*254
 		self._assert_task_is_valid()
 
 	def test_due_date_cant_be_blank(self):
-		self.due_date = ""
+		self.task.due_date = ""
 		self._assert_task_is_invalid()
 
 	def test_name_must_be_unique(self):
@@ -60,11 +61,11 @@ class TaskModelTestCase(TestCase):
 			)
 
 	def test_name_is_too_large(self):
-		self.name = "a"*101
+		self.task.name = "a"*101
 		self._assert_task_is_invalid()
 
 	def test_name_isnt_too_large(self):
-		self.name = "k"*99
+		self.task.name = "k"*99
 		self._assert_task_is_valid()
 
 	def test_task_team_integrity(self):

@@ -40,11 +40,6 @@ class User(AbstractUser):
 class Team(models.Model):
     name = models.CharField(max_length=100, unique=True)
     members = models.ManyToManyField(User, related_name='teams')
-    team_leader = models.ForeignKey(User, on_delete=models.CASCADE, blank = False, unique = False)
-
-    def has_team_leader_perms(self, user):
-        #custom object level permissions for editing this instance
-        return user == self.team_leader
 
     def __str__(self):
         return self.name

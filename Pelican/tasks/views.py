@@ -4,14 +4,13 @@ from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import ImproperlyConfigured
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect, render, get_object_or_404
 from django.views import View
 from django.views.generic.edit import FormView, UpdateView
 from django.urls import reverse
 from tasks.forms import LogInForm, PasswordForm, UserForm, SignUpForm, TeamForm, TaskForm
 from tasks.helpers import login_prohibited
 from .models import User, Team, Task, Invitation, Notification
-from django.shortcuts import get_object_or_404
 from django.http import HttpResponseRedirect
 from django.db.models import Q
 
@@ -25,6 +24,7 @@ def dashboard(request):
         new_team = team_form.save()
         new_team.members.add(current_user)
         new_team.save()
+
         return redirect('dashboard')
 
     # Fetching teams associated with the current user
@@ -64,12 +64,9 @@ def remove_member(request, team_id, member_id):
     team = get_object_or_404(Team, pk=team_id)
     member_to_remove = get_object_or_404(User, pk=member_id)
 
-    if request.method == 'POST' and team.has_team_leader_perms(request.user):
+    if request.method == 'POST':
         team.members.remove(member_to_remove)
         return HttpResponseRedirect(reverse('team_detail', args=[team_id]))
-
-    else:
-        messages.add_message(request, messages.ERROR, "Only Team Leaders can remove members, You are not a Team Leader")
 
     return render(request, 'confirm_remove_member.html', {'team': team, 'member_to_remove': member_to_remove})
 
@@ -312,11 +309,9 @@ class TeamCreateView(LoginRequiredMixin, FormView):
     def form_valid(self, form):
         team_name = form.cleaned_data['name']
         selected_members = form.cleaned_data['members']
-        team_leader = self.request.user
 
         new_team = Team.objects.create(name=team_name)
         new_team.members.add(*selected_members)
-        new_team.team_leader.add(team_leader)
         
         # Add the current user to the team
         new_team.members.add(self.request.user)

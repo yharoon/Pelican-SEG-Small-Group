@@ -129,7 +129,7 @@ class UsernameInputField(forms.CharField):
 class TeamForm(forms.ModelForm):
     class Meta:
         model = Team
-        fields = ['name', 'members', 'team_leader']
+        fields = ['name', 'members']
 
 class TaskForm(forms.ModelForm):
     class Meta:
