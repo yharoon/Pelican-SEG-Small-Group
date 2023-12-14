@@ -4,18 +4,17 @@
   <div class="row justify-content-center align-items-center h-100">
     <div class="col-md-6 col-lg-4 order-lg-2">
       <!-- Center-Right Card -->
-      <div class="card h-99 rounded-9 bg-dark text-light" style="border: none; padding: 27px;">
-        <!-- Animated typing effect for Hi, Welcome Back! text using CSS keyframes -->
-        <h1 class="text-center typed-text " style="font-family: 'Roboto Mono', monospace; color: #30D5C8;font-size: 33px;">Hi,Welcome Back!</h1>
+      <div class="card h-99 rounded-9 bg-dark text-light">
+        <h1 class="text-center typed-text ">Hi,Welcome Back!</h1>
         <!-- Rest of your form -->
         <form action="{% url 'log_in' %}" method="post">
           {% csrf_token %}
           <div class="p-3">
             <input type="text" name="username" class="form-control mb-3" placeholder="Enter your username">
             <input type="password" name="password" class="form-control mb-3" placeholder="Enter your password">
-            <button type="submit" class="btn btn-light btn-block" style="background-color: #30D5C8;">Log in</button>
+            <button type="submit" class="btn btn-light btn-block" >Log in</button>
             <div class="row mt-3">
-              <small>Not a member yet? <a href="{% url 'sign_up' %}" style="color: #30D5C8;">Sign Up</a></small>
+              <small>Not a member yet? <a href="{% url 'sign_up' %}">Sign Up</a></small>
             </div>
             <div class="row mt-3">
             </div>
@@ -30,7 +29,7 @@
         <div class="text-center">
           <img src="../static/images/image.png" class="img-fluid" alt="Background Image">
         </div>
-        <p class="text-white fs-2 mb-0" style="font-family: 'Roboto Mono', monospace;"> <span style="color: #30D5C8;font-size: 33px">Manage</span> your tasks</p>
+        <p class="text-white fs-2 mb-0"> <span class = text-turquoise>Manage</span> your tasks</p>
         <!-- <small class="text-white mb-0" style="width: 17rem;font-family: 'Courier New', Courier, monospace;">Join us to help make managing your tasks easier</small> -->
         <!-- Additional content here -->
       </div>
@@ -38,21 +37,5 @@
   </div>
 </div>
 
-<style>
-  /* Define the animation for typing effect */
-  @keyframes typing {
-    from { width: 0 }
-    to { width: 80% }
-  }
-
-  /* Apply the typing animation to the 'typed-text' class */
-  .typed-text {
-    overflow: hidden;
-    border-right: .15em solid white; /* Adjust the border to mimic typing cursor */
-    white-space: nowrap;
-    margin: 0 auto; /* Center the text */
-    letter-spacing: .1em; /* Adjust letter spacing for better appearance */
-    animation: typing 2s steps(30, end);
-  }
-</style>
 {% endblock %}
+
