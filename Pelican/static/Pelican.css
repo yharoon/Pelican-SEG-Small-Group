@@ -46,6 +46,19 @@ span.text-turquoise{
 
 }
 
+.sign_up{
+    font-family: 'Roboto Mono', monospace;
+    color:#30D5C8
+}
+
 .btn {
     background-color: #30D5C8;
 }
+
+.btn-primary{
+    background-color: #30D5C8;
+    color: black;
+    border-color: aliceblue;
+
+}
+
